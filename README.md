@@ -1,1 +1,1 @@
-# club-room-booking
+# db-design-meeting-scheduler
