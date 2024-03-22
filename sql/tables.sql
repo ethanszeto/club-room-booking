@@ -48,7 +48,7 @@ CREATE TABLE team_to_user (
 DROP TABLE IF EXISTS building;
 CREATE TABLE building (
 	building_id		INT AUTO_INCREMENT		PRIMARY KEY,
-    building_code	VARCHAR(3)				NOT NULL,
+    building_code	VARCHAR(4)				NOT NULL,
     building_name	VARCHAR(64)				NOT NULL
 );
 
