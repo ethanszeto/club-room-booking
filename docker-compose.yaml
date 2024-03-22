@@ -1,0 +1,10 @@
+#local dev env only
+services:
+  app:
+    build: .
+    container_name: database-project-container
+    command: npm start
+    ports:
+      - 5200:5200
+    volumes:
+      - .:/app
