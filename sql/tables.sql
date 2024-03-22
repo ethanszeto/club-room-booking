@@ -10,7 +10,7 @@ CREATE TABLE user (
     first_name		VARCHAR(64)				NOT NULL,
     last_name		VARCHAR(64)				NOT NULL,
     phone_number	VARCHAR(16)				NOT NULL UNIQUE,
-    password		VARCHAR(64)				NOT NULL
+    password		VARCHAR(72)				NOT NULL
 );
 
 DROP TABLE IF EXISTS club;
