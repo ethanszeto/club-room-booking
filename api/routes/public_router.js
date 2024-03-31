@@ -12,11 +12,11 @@ router.route("/").get((req, res) => {
 });
 
 router.route("/public/js/:script.js").get((req, res) => {
-  res.sendFile(path.resolve() + `public/js/${req.params}.js)`);
+  res.sendFile(path.resolve() + `public/js/${req.params.script}.js)`);
 });
 
 router.route("/public/css/:style.css").get((req, res) => {
-  res.sendFile(path.resolve() + `public/css/${req.params}.css)`);
+  res.sendFile(path.resolve() + `public/css/${req.params.style}.css)`);
 });
 
 router.route("/connect").post(ConnectionController.connect);

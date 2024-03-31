@@ -7,8 +7,9 @@
  * @returns Response
  */
 async function request(type, data, endpoint) {
+  console.log(data);
   try {
-    const response = await fetch(`http://localhost:5200/requests/${endpoint}`, {
+    const response = await fetch(`http://localhost:5200${endpoint}`, {
       method: type,
       headers: {
         "Content-Type": "application/json",
