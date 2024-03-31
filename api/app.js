@@ -3,6 +3,7 @@ import cors from "cors";
 import helmet from "helmet";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
+import router from "./routes/public_router.js";
 
 /**
  * This file controls the express server and
@@ -19,6 +20,6 @@ app.use(cookieParser());
 app.use(bodyParser.json());
 app.use("/public", express.static(process.cwd() + "/public"));
 
-//app.use("/", router);
+app.use("/", router);
 
 export default app;
