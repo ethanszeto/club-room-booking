@@ -2,6 +2,7 @@ import express from "express";
 import path from "path";
 import bodyParser from "body-parser";
 import ConnectionController from "../controllers/connection_controller.js";
+import QueryController from "../controllers/query_controller.js";
 
 const router = express.Router();
 
@@ -21,6 +22,6 @@ router.route("/public/css/:style.css").get((req, res) => {
 
 router.route("/connect").post(ConnectionController.connect);
 
-router.route("/request").post();
+router.route("/request").post(QueryController.makeQuery);
 
 export default router;

@@ -26,4 +26,15 @@ export default class MySQLConnection {
       throw this.error;
     }
   }
+
+  static async makeQuery(sql) {
+    if (this.connection) {
+      this.connection.query(sql, (err, rows, fields) => {});
+      if (err) {
+        this.error = err;
+      }
+    } else {
+      // not logged in
+    }
+  }
 }
