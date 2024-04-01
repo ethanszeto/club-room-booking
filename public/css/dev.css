@@ -1,0 +1,4 @@
+.dev {
+  /* change to hidden when in prod */
+  display: block;
+}

@@ -5,11 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script defer src="/public/js/connect.js"></script>
     <script defer src="/public/js/api.js"></script>
+    <script defer src="/public/js/dev.js"></script>
+    <link href="/public/css/dev.css" rel="stylesheet" type="text/css" />
+    <link href="/public/css/index.css" rel="stylesheet" type="text/css" />
     <title>Document</title>
   </head>
   <body>
     <input id="input-username" type="text" placeholder="username" />
     <input id="input-password" type="password" placeholder="password" />
     <button id="connect-button">Submit</button>
+    <hr />
+    <div class="dev">
+      <textarea id="sql-query" class="input-area"></textarea>
+      <br />
+      <button id="query-button">Make Query</button>
+    </div>
   </body>
 </html>

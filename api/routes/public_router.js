@@ -21,4 +21,6 @@ router.route("/public/css/:style.css").get((req, res) => {
 
 router.route("/connect").post(ConnectionController.connect);
 
+router.route("/request").post();
+
 export default router;
