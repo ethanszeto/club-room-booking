@@ -4,12 +4,12 @@ export default class MySQLConnection {
   static connection;
   static error;
 
-  static async connect(username, password) {
+  static async connect(username, pass) {
     this.connection = mysql.createConnection({
       host: process.env.DB_HOST,
       port: process.env.DB_PORT,
       user: username,
-      password: password,
+      password: pass,
       database: process.env.DB_NAME,
     });
 
