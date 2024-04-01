@@ -28,11 +28,14 @@ export default class MySQLConnection {
   }
 
   static async makeQuery(sql) {
+    let outputRows, outputFields;
     if (this.connection) {
       this.connection.query(sql, (err, rows, fields) => {});
       if (err) {
         this.error = err;
       }
+      outputRows = rows;
+      outputFields = fields;
     } else {
       // not logged in
     }
