@@ -6,11 +6,11 @@ export default class MySQLConnection {
 
   static async connect(username, pass) {
     this.connection = mysql.createConnection({
-      host: process.env.DB_HOST,
-      port: process.env.DB_PORT,
+      host: "host.docker.internal",
+      port: 3306,
       user: username,
       password: pass,
-      database: process.env.DB_NAME,
+      database: "club_meetings",
     });
 
     this.connection.connect((err) => {
