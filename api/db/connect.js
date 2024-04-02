@@ -30,14 +30,23 @@ export default class MySQLConnection {
   static async makeQuery(sql) {
     let outputRows, outputFields;
     if (this.connection) {
-      this.connection.query(sql, (err, rows, fields) => {});
-      if (err) {
-        this.error = err;
-      }
-      outputRows = rows;
-      outputFields = fields;
+      this.connection.query(sql, (err, rows, columns) => {
+        if (err) {
+          this.error = err;
+        } else {
+          outputRows = rows;
+          outputColumns = columns;
+        }
+      });
     } else {
-      // not logged in
+      console.error("\nNot logged into mySQL server!");
+      this.error = "\nNot logged into mySQL server!";
     }
+
+    if (this.error) {
+      throw this.error;
+    }
+
+    return { cols: outputColumns, rows: outputRows };
   }
 }
