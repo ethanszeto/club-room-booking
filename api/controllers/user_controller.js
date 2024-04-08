@@ -13,7 +13,15 @@ export default class UserController {
         "${req.body.password}"
     );`;
 
-    await MySQLConnection.makeQuery(req, res, sql);
+    MySQLConnection.makeQuery(sql, (err, rows, columns) => {
+      if (rows != undefined) {
+        res.redirect("/user/login");
+      } else {
+        // potentially check which field is duplicate
+        // bad signup -- try another username/email/phone
+        res.redirect("/user/signup");
+      }
+    });
   }
 
   static async login(req, res) {
