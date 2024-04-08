@@ -1,17 +1,29 @@
 import mysql from "mysql2";
+import { config as dotenvConfig } from "dotenv";
 
 export default class MySQLConnection {
   static connection;
   static error;
 
   static async connect(username, pass) {
-    this.connection = mysql.createConnection({
-      host: "host.docker.internal",
-      port: 3306,
-      user: username,
-      password: pass,
-      database: "club_meetings",
-    });
+    dotenvConfig();
+    if (process.env.PRODUCTION == "true") {
+      this.connection = mysql.createConnection({
+        host: "host.docker.internal",
+        port: 3306,
+        user: username,
+        password: pass,
+        database: "club_meetings",
+      });
+    } else {
+      this.connection = mysql.createConnection({
+        host: "host.docker.internal",
+        port: 3306,
+        user: process.env.USER,
+        password: process.env.PASSWORD,
+        database: "club_meetings",
+      });
+    }
 
     this.connection.connect((err) => {
       if (err) {
@@ -27,14 +39,13 @@ export default class MySQLConnection {
     }
   }
 
-  static async makeQuery(req, res, sql) {
+  static async makeQuery(sql, callback) {
     if (this.connection) {
       this.connection.query(sql, (err, rows, columns) => {
         if (err) {
-          console.error(err);
+          callback(err, null, null);
         } else {
-          console.log({ cols: columns, rows: rows });
-          res.send({ cols: columns, rows: rows });
+          callback(null, rows, columns);
         }
       });
     } else {
