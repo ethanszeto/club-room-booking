@@ -11,10 +11,14 @@
     <title>Document</title>
   </head>
   <body>
-    <input id="input-username" type="text" placeholder="username" />
-    <input id="input-password" type="password" placeholder="password" />
-    <button id="connect-button">Submit</button>
-    <hr />
+    <div id="connect-div">
+      <h1 id="connect-db-header">Connect to local mySQL database instance</h1>
+      <div id="connect-input-div">
+        <input id="input-username" type="text" placeholder="username" />
+        <input id="input-password" type="password" placeholder="password" />
+        <button class="btn" id="connect-button">Submit</button>
+      </div>
+    </div>
     <div id="dev" class="dev">
       <textarea id="sql-query" class="input-area"></textarea>
       <br />

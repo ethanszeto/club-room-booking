@@ -1,3 +1,50 @@
-.input-area {
-  resize: none;
+.btn {
+  padding: 0px;
+  transition: transform 0.3s;
+  background: #ffffff;
+  border-color: #000000;
+  border-width: 3px;
+  color: #000000;
+  font-family: Monaco, monospace;
+  font-size: 15px;
+  height: 30px;
+  width: 150px;
+}
+
+.btn:hover {
+  cursor: pointer;
+  background: #000000;
+  color: #ffffff;
+  transform: scale(1.05);
+}
+
+.btn span {
+  transition: transform 0.3s;
+}
+
+.btn:hover span {
+  transform: scale(0.95);
+}
+
+#connect-div {
+  background-color: white;
+  width: 50%;
+  height: 50%;
+  margin-top: 15%;
+  margin-inline: auto;
+  border-color: black;
+  border-width: 2px;
+}
+
+#connect-db-header {
+  text-align: center;
+}
+
+#connect-input-div {
+  text-align: center;
+}
+
+#input-username,
+#input-password {
+  font-size: 18px;
 }

@@ -1,6 +1,10 @@
+.input-area {
+  resize: none;
+}
+
 .dev {
   /* change to hidden when in prod */
-  display: block;
+  display: none;
   position: absolute;
   background-color: black;
   right: 0%;
