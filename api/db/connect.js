@@ -27,26 +27,18 @@ export default class MySQLConnection {
     }
   }
 
-  static async makeQuery(sql) {
-    let outputRows, outputFields;
+  static async makeQuery(req, res, sql) {
     if (this.connection) {
       this.connection.query(sql, (err, rows, columns) => {
         if (err) {
-          this.error = err;
+          console.error(err);
         } else {
-          outputRows = rows;
-          outputColumns = columns;
+          console.log({ cols: columns, rows: rows });
+          res.send({ cols: columns, rows: rows });
         }
       });
     } else {
       console.error("\nNot logged into mySQL server!");
-      this.error = "\nNot logged into mySQL server!";
     }
-
-    if (this.error) {
-      throw this.error;
-    }
-
-    return { cols: outputColumns, rows: outputRows };
   }
 }
