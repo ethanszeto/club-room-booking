@@ -19,6 +19,30 @@ export default class UserController {
       } else {
         // potentially check which field is duplicate
         // bad signup -- try another username/email/phone
+        let sql = `SELECT username FROM user WHERE username = "${req.body.username}";`;
+
+        MySQLConnection.makeQuery(sql, (err, rows, colums) => {
+          if (rows != undefined) {
+            console.log("Username already exists");
+          }
+        });
+
+        sql = `SELECT email FROM user WHERE email = "${req.body.email}";`;
+
+        MySQLConnection.makeQuery(sql, (err, rows, colums) => {
+          if (rows != undefined) {
+            console.log("User with email already exists");
+          }
+        });
+
+        sql = `SELECT phone_number FROM user WHERE phone_number = "${req.body.phone_number}";`;
+
+        MySQLConnection.makeQuery(sql, (err, rows, colums) => {
+          if (rows != undefined) {
+            console.log("User with phone number already exists");
+          }
+        });
+
         res.redirect("/user/signup");
       }
     });
