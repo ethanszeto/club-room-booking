@@ -48,3 +48,9 @@
 #input-password {
   font-size: 18px;
 }
+
+#connect-breaker {
+  width: 30%;
+  border-color: black;
+  margin-bottom: 25px;
+}
