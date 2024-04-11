@@ -1,15 +1,21 @@
 import jwt from "jsonwebtoken";
+import Errors from "../error/errors.js";
+import handleError from "../error/error_handler.js";
 
 export default class Authorize {
   static async loggedIn(req, res, next) {
     if (req.cookies.token) {
       const payload = jwt.verify(req.cookies.token, process.env.TOKEN_KEY);
       if (payload) {
+        // Proceed with next request
+        next();
       } else {
         //bad token
+        return handleError(res, Errors[403].Forbidden);
       }
     } else {
       //no token
+      return handleError(res, Error[401].Unauthorized);
     }
   }
 
