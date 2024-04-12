@@ -88,4 +88,25 @@ export default class UserController {
   static async requestToJoinTeam(req, res) {
     TeamController.createTeamToUser(req, res, req.body.club_id, req.body.team_name, Status.Pending);
   }
+
+  static async getUserClubs(req, res) {
+    let data = req.body.user_data;
+
+    let sql = `
+    SELECT DISTINCT club_name, club.club_id
+      FROM club
+      JOIN team ON club.club_id = team.club_id
+      JOIN team_to_user ON team.team_name = team_to_user.team_name AND team.club_id = team_to_user.club_id
+      JOIN user ON team_to_user.user_id = ${data.user_id}
+      ORDER BY club_name ASC;
+    `;
+
+    MySQLConnection.makeQuery(sql, (err, rows, columns) => {
+      if (err) {
+        handleError(res, Errors[500].InternalServerError);
+      } else {
+        res.send({ columns: columns, rows: rows });
+      }
+    });
+  }
 }

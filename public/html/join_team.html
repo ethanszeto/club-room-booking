@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script defer src="/public/js/dev.js"></script>
+    <script defer src="/public/js/api.js"></script>
+    <script defer src="/public/js/join_team.js"></script>
+    <link href="/public/css/join_team.css" rel="stylesheet" type="text/css" />
+    <link href="/public/css/dev.css" rel="stylesheet" type="text/css" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h1>Join a club!</h1>
+    <div id="content">
+      <div id="clubs" class="panel">
+        <h2>Select a club to join</h2>
+        <hr />
+        <select id="select-club"></select>
+      </div>
+      <div id="teams" class="panel">
+        <h2>Select a team to join</h2>
+        <hr />
+        <select id="select-team"></select>
+      </div>
+    </div>
+    <div id="dev" class="dev">
+      <textarea id="sql-query" class="input-area"></textarea>
+      <br />
+      <button id="query-button">Make Query</button>
+      <p id="query-output"></p>
+    </div>
+    <button id="join-team">Submit</button>
+  </body>
+</html>

@@ -1,0 +1,17 @@
+.panel {
+  margin: 30px 30px 30px 30px;
+  width: 40%;
+  position: relative;
+  border: 1px solid black;
+  top: 0;
+  left: 0;
+}
+
+#content {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  position: absolute;
+  justify-content: center;
+  width: 100%;
+}

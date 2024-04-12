@@ -22,8 +22,20 @@ export default class ClubController {
         console.error(err);
         return handleError(res, Errors[500].InternalServerError);
       } else {
-        console.log;
         TeamController.createTeamByName(req, res, "Eboard", rows[0].club_id);
+      }
+    });
+  }
+
+  static async getAllClubs(req, res) {
+    let sql = `SELECT * FROM club;`;
+
+    MySQLConnection.makeQuery(sql, (err, rows, columns) => {
+      if (err) {
+        console.error(err);
+        return handleError(res, Errors[500].InternalServerError);
+      } else {
+        res.send({ columns: columns, rows: rows });
       }
     });
   }

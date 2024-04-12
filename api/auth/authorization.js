@@ -5,18 +5,23 @@ import MySQLConnection from "../db/connect.js";
 
 export default class Authorize {
   static async loggedIn(req, res, next) {
-    if (req.cookies.token) {
-      const payload = jwt.verify(req.cookies.token, process.env.TOKEN_KEY);
-      if (payload) {
-        // Proceed with next request
-        next();
+    if (MySQLConnection.connection) {
+      if (req.cookies.token) {
+        const payload = jwt.verify(req.cookies.token, process.env.TOKEN_KEY);
+        if (payload) {
+          // Proceed with next request
+          req.body.user_data = payload;
+          next();
+        } else {
+          //bad token
+          return handleError(res, Errors[403].Forbidden);
+        }
       } else {
-        //bad token
-        return handleError(res, Errors[403].Forbidden);
+        //no token
+        return handleError(res, Errors[401].Unauthorized);
       }
     } else {
-      //no token
-      return handleError(res, Errors[401].Unauthorized);
+      res.redirect("/");
     }
   }
 
@@ -39,25 +44,13 @@ export default class Authorize {
   }
 
   static async getTokenDataAsResponse(req, res) {
-    if (req.cookies.token) {
-      const payload = jwt.verify(req.cookies.token, process.env.TOKEN_KEY);
-      if (payload) {
-        let query = `SELECT * FROM user WHERE user_id = ${payload.user_id};`;
-        await MySQLConnection.makeQuery(query, (err, rows, columns) => {
-          if (err) {
-            return handleError(res, Errors[500].InternalServerError);
-          } else {
-            res.send({ columns: columns, rows: rows });
-          }
-        });
+    await Authorize.getTokenData(req, res, (err, rows, columns) => {
+      if (err) {
+        return handleError(res, Errors[500].InternalServerError);
       } else {
-        //bad token
-        return handleError(res, Errors[403].Forbidden);
+        res.send({ columns: columns, rows: rows });
       }
-    } else {
-      //no token
-      return handleError(res, Errors[401].Unauthorized);
-    }
+    });
   }
 
   /*
