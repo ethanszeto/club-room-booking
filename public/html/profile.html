@@ -3,25 +3,22 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script defer src="/public/js/api.js"></script>
-    <script defer src="/public/js/login.js"></script>
     <script defer src="/public/js/dev.js"></script>
+    <script defer src="/public/js/api.js"></script>
+    <script defer src="/public/js/profile.js"></script>
     <link href="/public/css/dev.css" rel="stylesheet" type="text/css" />
-    <title>Login Page</title>
+    <title>Document</title>
   </head>
   <body>
     <div>
-      <h1>Log in to book a meeting!</h1>
-      <input id="username" name="username" placeholder="username" type="text" />
-      <br />
-      <br />
-      <input id="password" name="password" placeholder="password" type="password" />
-      <br />
-      <br />
-      <button id="submit-login">Submit</button>
-      <p id="login-error-display"></p>
+      <h1>Your Profile</h1>
+      <p id="username"></p>
+      <p id="first-name"></p>
+      <p id="last-name"></p>
+      <p id="email"></p>
+      <p id="phone"></p>
+      <p id="profile-error-display"></p>
     </div>
-
     <div id="dev" class="dev">
       <textarea id="sql-query" class="input-area"></textarea>
       <br />

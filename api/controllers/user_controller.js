@@ -1,4 +1,8 @@
 import MySQLConnection from "../db/connect.js";
+import Errors from "../error/errors.js";
+import handleError from "../error/error_handler.js";
+import TeamController from "./team_controller.js";
+import Status from "../enum/status.js";
 import { config as dotenvConfig } from "dotenv";
 import jwt from "jsonwebtoken";
 
@@ -73,10 +77,15 @@ export default class UserController {
           httpOnly: true,
           maxAge: 60 * 60 * 1000,
         });
+        // success, change later
         res.redirect("/");
       } else {
-        res.redirect("/user/login");
+        handleError(res, Errors[401].LoginFailed);
       }
     });
+  }
+
+  static async requestToJoinTeam(req, res) {
+    TeamController.createTeamToUser(req, res, req.body.club_id, req.body.team_name, Status.Pending);
   }
 }

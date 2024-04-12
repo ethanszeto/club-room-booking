@@ -1,3 +1,5 @@
+import Errors from "../error/errors.js";
+import handleError from "../error/error_handler.js";
 import MySQLConnection from "../db/connect.js";
 
 export default class QueryController {
@@ -6,7 +8,7 @@ export default class QueryController {
     await MySQLConnection.makeQuery(req.body.query, (err, rows, columns) => {
       if (err) {
         console.log(err);
-        res.send(err);
+        return handleError(res, Errors[500].InternalServerError);
       }
       res.send({ columns: columns, rows: rows });
     });

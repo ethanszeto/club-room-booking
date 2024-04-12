@@ -54,3 +54,7 @@
   border-color: black;
   margin-bottom: 25px;
 }
+
+#connection-error-display {
+  color: red;
+}

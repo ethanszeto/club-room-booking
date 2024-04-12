@@ -23,6 +23,14 @@ router.route("/user/login").get((req, res) => {
   res.sendFile(path.resolve() + "/public/html/login.html");
 });
 
+router.route("/user/profile").get(Authorize.loggedIn, (req, res) => {
+  res.sendFile(path.resolve() + "/public/html/profile.html");
+});
+
+router.route("/club/create").get(Authorize.loggedIn, (req, res) => {
+  res.sendFile(path.resolve() + "/public/html/create_club.html");
+});
+
 router.route("/public/js/:script.js").get((req, res) => {
   res.sendFile(path.resolve() + `public/js/${req.params.script}.js)`);
 });
@@ -42,5 +50,7 @@ router.route("/user/signup").post(UserController.signup);
 router.route("/user/login").post(UserController.login);
 
 router.route("/club/create").post(Authorize.loggedIn, ClubController.createClub);
+
+router.route("/user/get-token-data").post(Authorize.loggedIn, Authorize.getTokenDataAsResponse);
 
 export default router;

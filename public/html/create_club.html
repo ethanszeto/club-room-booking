@@ -3,23 +3,17 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script defer src="/public/js/connect.js"></script>
     <script defer src="/public/js/api.js"></script>
+    <script defer src="/public/js/create_club.js"></script>
     <script defer src="/public/js/dev.js"></script>
     <link href="/public/css/dev.css" rel="stylesheet" type="text/css" />
-    <link href="/public/css/index.css" rel="stylesheet" type="text/css" />
     <title>Document</title>
   </head>
   <body>
-    <div id="connect-div">
-      <h1 id="connect-db-header">Connect to local mySQL database instance</h1>
-      <hr id="connect-breaker" />
-      <div id="connect-input-div">
-        <input id="input-username" type="text" placeholder="username" />
-        <input id="input-password" type="password" placeholder="password" />
-        <button class="btn" id="connect-button">Submit</button>
-        <p id="connection-error-display"></p>
-      </div>
+    <div>
+      <h1>Create a Club!</h1>
+      <input id="club-name" type="text" placeholder="Club Name" />
+      <button id="create-club">Submit</button>
     </div>
     <div id="dev" class="dev">
       <textarea id="sql-query" class="input-area"></textarea>
