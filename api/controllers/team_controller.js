@@ -67,14 +67,20 @@ export default class TeamController {
     let user_id = data.user_id;
     let club_id = req.body.club_id;
 
-    let sqlAllTeams = `
-    SELECT team_name, team.club_id
+    let sqlNotUserTeams = `
+      SELECT team.team_name
       FROM team
-      JOIN club ON team.club_id = club.club_id
-      WHERE club.club_id = ${club_id}
-      ORDER BY team_name ASC;`;
+      JOIN team_to_user ON team.team_name = team_to_user.team_name AND team.club_id = team_to_user.club_id
+      WHERE team_to_user.club_id = ${club_id}
+      AND team.team_name NOT IN (
+          SELECT team_to_user.team_name
+          FROM team_to_user
+          WHERE user_id = ${user_id} AND club_id = ${club_id}
+      )
+      ORDER BY team_name ASC;
+    `;
 
-    MySQLConnection.makeQuery(sqlAllTeams, (err1, allTeams, columns1) => {
+    MySQLConnection.makeQuery(sqlNotUserTeams, (err1, notUserTeams, columns1) => {
       if (err1) {
         console.error(err1);
         return handleError(res, Errors[500].InternalServerError);
@@ -89,34 +95,57 @@ export default class TeamController {
             console.error(err2);
             return handleError(res, Errors[500].InternalServerError);
           } else {
+            console.log(userTeams);
+            console.log(notUserTeams);
             let teams = [];
-            let allTeamsStr = [];
-            let userTeamsStr = [];
-            allTeams.forEach((team) => {
-              allTeamsStr.push(team.team_name);
+            notUserTeams.forEach((team) => {
+              teams.push({ team_name: team.team_name, status: Status.None });
             });
-            userTeams.forEach((team_to_user) => {
-              if (Status.equals(team_to_user.status, Status.Approved)) {
-                userTeamsStr.push(team_to_user.team_name);
-              }
+            userTeams.forEach((team) => {
+              teams.push({ team_name: team.team_name, status: team.status });
             });
-            allTeamsStr.forEach((team) => {
-              let in_team = userTeamsStr.includes(team);
-              teams.push({ team_name: team, user_in_team: in_team });
-            });
-            res.send(teams);
+            res.send({ teams: teams });
           }
         });
       }
     });
   }
 
-  static joinTeam(req, res) {
+  static async requestJoinTeam(req, res) {
     let data = req.body.user_data;
     let user_id = data.user_id;
     let club_id = req.body.club_id;
     let team_name = req.body.team_name;
 
     TeamController.createTeamToUser(req, res, user_id, club_id, team_name, Status.Pending);
+  }
+
+  static async getUserTeamRequests(req, res) {
+    let data = req.body.user_data;
+    let user_id = data.user_id;
+
+    let sql = `
+    SELECT user.user_id, user.first_name, user.last_name, user.email, club.club_id, club.club_name, team.team_name
+      FROM user
+      JOIN team_to_user ON user.user_id = team_to_user.user_id
+      JOIN team ON team_to_user.club_id = team.club_id AND team_to_user.team_name = team.team_name
+      JOIN club ON team.club_id = club.club_id
+      WHERE (team.club_id, team.team_name) IN (
+        SELECT t2.club_id, t2.team_name
+          FROM team t2
+          JOIN team_to_user ON team.club_id = team_to_user.club_id AND team.team_name = team_to_user.team_name
+          JOIN user ON team_to_user.user_id = user.user_id
+          WHERE user.user_id = ${user_id} AND team_to_user.status = "${Status.Approved}"
+          ) AND team_to_user.status = "${Status.Pending}";
+    `;
+
+    MySQLConnection.makeQuery(sql, (err, rows, columns) => {
+      if (err) {
+        console.error(err);
+        handleError(res, Errors[500].InternalServerError);
+      } else {
+        res.send({ columns: columns, rows: rows });
+      }
+    });
   }
 }

@@ -27,9 +27,9 @@ async function loadTeams() {
   } else {
     console.log(response);
     document.getElementById("select-team").innerHTML = "";
-    response.forEach((team) => {
+    response.teams.forEach((team) => {
       let option = document.createElement("option");
-      if (team.user_in_team) {
+      if (team.status == "pending" || team.status == "approved" || team.status == "denied") {
         option.disabled = "true";
       }
       option.value = team.team_name;

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script defer src="/public/js/api.js"></script>
+    <script defer src="/public/js/approve_user.js"></script>
+    <script defer src="/public/js/dev.js"></script>
+    <link href="/public/css/approve_user.css" rel="stylesheet" type="text/css" />
+    <link href="/public/css/dev.css" rel="stylesheet" type="text/css" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h1>Approve users to a team</h1>
+    <div>
+      <div id="users-display">
+        <p>Approve / Deny</p>
+      </div>
+      <button id="approve-users">Submit</button>
+    </div>
+    <div id="dev" class="dev">
+      <textarea id="sql-query" class="input-area"></textarea>
+      <br />
+      <button id="query-button">Make Query</button>
+      <p id="query-output"></p>
+    </div>
+  </body>
+</html>

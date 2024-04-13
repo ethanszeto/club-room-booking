@@ -40,6 +40,10 @@ router.route("/club/team/join").get(Authorize.loggedIn, (req, res) => {
   res.sendFile(path.resolve() + "/public/html/join_team.html");
 });
 
+router.route("/user/approve").get(Authorize.loggedIn, (req, res) => {
+  res.sendFile(path.resolve() + "/public/html/approve_user.html");
+});
+
 router.route("/public/js/:script.js").get((req, res) => {
   res.sendFile(path.resolve() + `public/js/${req.params.script}.js)`);
 });
@@ -58,6 +62,10 @@ router.route("/user/signup").post(UserController.signup);
 
 router.route("/user/login").post(UserController.login);
 
+router.route("/user/get-token-data").post(Authorize.loggedIn, Authorize.getTokenDataAsResponse);
+
+router.route("/user/get-clubs").post(Authorize.loggedIn, ClubController.getUserClubs);
+
 router.route("/club/create").post(Authorize.loggedIn, ClubController.createClub);
 
 router.route("/club/team/create").post(Authorize.loggedIn, TeamController.createTeam);
@@ -66,10 +74,10 @@ router.route("/club/get-all").post(Authorize.loggedIn, ClubController.getAllClub
 
 router.route("/club/team/get-teams").post(Authorize.loggedIn, TeamController.getTeamsByClubId);
 
-router.route("/club/team/join").post(Authorize.loggedIn, TeamController.joinTeam);
+router.route("/club/team/join").post(Authorize.loggedIn, TeamController.requestJoinTeam);
 
-router.route("/user/get-token-data").post(Authorize.loggedIn, Authorize.getTokenDataAsResponse);
+router.route("/club/team/get-user-team-requests").post(Authorize.loggedIn, TeamController.getUserTeamRequests);
 
-router.route("/user/get-clubs").post(Authorize.loggedIn, UserController.getUserClubs);
+router.route("/club/team/post-user-team-updates").post(Authorize.loggedIn, UserController.updateRequestStatus);
 
 export default router;

@@ -8,6 +8,6 @@ async function login() {
   if (response.error) {
     document.getElementById("login-error-display").innerHTML = response.error;
   } else {
-    window.location.href = "http://localhost:5200/user/profile";
+    window.location.href = "/user/profile";
   }
 }

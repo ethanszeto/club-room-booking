@@ -89,24 +89,73 @@ export default class UserController {
     TeamController.createTeamToUser(req, res, req.body.user_data.user_id, req.body.club_id, req.body.team_name, Status.Pending);
   }
 
-  static async getUserClubs(req, res) {
-    let data = req.body.user_data;
+  static async updateRequestStatus(req, res) {
+    let updates = req.body.updates;
+    let promises = [];
 
-    let sql = `
-    SELECT DISTINCT club_name, club.club_id
-      FROM club
-      JOIN team ON club.club_id = team.club_id
-      JOIN team_to_user ON team.team_name = team_to_user.team_name AND team.club_id = team_to_user.club_id
-      JOIN user ON team_to_user.user_id = ${data.user_id}
-      ORDER BY club_name ASC;
-    `;
+    for (let update of updates) {
+      let user_id = update.user_id;
+      let club_id = update.club_id;
+      let team_name = update.team_name;
+      let status = update.approval ? Status.Approved : Status.Denied;
 
-    MySQLConnection.makeQuery(sql, (err, rows, columns) => {
-      if (err) {
-        handleError(res, Errors[500].InternalServerError);
-      } else {
-        res.send({ columns: columns, rows: rows });
-      }
-    });
+      let sql = `
+        UPDATE team_to_user
+        SET status = "${status}"
+        WHERE user_id = ${user_id} AND club_id = ${club_id} AND team_name = "${team_name}";
+      `;
+
+      let promise = new Promise((resolve, reject) => {
+        MySQLConnection.makeQuery(sql, (err, rows, columns) => {
+          if (err) {
+            console.error(err);
+            reject(err);
+          } else {
+            resolve({ columns: columns, rows: rows });
+          }
+        });
+      });
+
+      promises.push(promise);
+    }
+
+    try {
+      await Promise.all(promises);
+      res.send("Updates successful");
+    } catch (error) {
+      handleError(res, Errors[500].InternalServerError);
+    }
   }
 }
+
+/*
+static async updateRequestStatus(req, res) {
+    let updates = req.body.updates;
+
+    updates.forEach((update) => {
+      let user_id = update.user_id;
+      let club_id = update.club_id;
+      let team_name = update.team_name;
+      let status;
+      if (update.approval) {
+        status = Status.Approved;
+      } else {
+        status = Status.Denied;
+      }
+      let sql = `
+        UPDATE team_to_user
+          SET status = "${status}"
+          WHERE user_id = ${user_id} AND club_id = ${club_id} AND team_name = "${team_name}";
+      `;
+
+      MySQLConnection.makeQuery(sql, (err, rows, columns) => {
+        if (err) {
+          console.error(err);
+          handleError(res, Errors[500].InternalServerError);
+        } else {
+          res.send({ columns: columns, rows: rows });
+        }
+      });
+    });
+  }
+*/
