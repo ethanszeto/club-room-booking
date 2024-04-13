@@ -68,7 +68,7 @@ export default class TeamController {
     let club_id = req.body.club_id;
 
     let sqlNotUserTeams = `
-      SELECT team.team_name
+      SELECT DISTINCT team.team_name
       FROM team
       JOIN team_to_user ON team.team_name = team_to_user.team_name AND team.club_id = team_to_user.club_id
       WHERE team_to_user.club_id = ${club_id}
@@ -86,7 +86,7 @@ export default class TeamController {
         return handleError(res, Errors[500].InternalServerError);
       } else {
         let sqlUserTeams = `
-          SELECT team_name, status
+          SELECT DISTINCT team_name, status
             FROM team_to_user
             WHERE user_id = ${user_id} AND club_id = ${club_id}
             ORDER BY team_name ASC;`;
