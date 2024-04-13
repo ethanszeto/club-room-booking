@@ -86,7 +86,7 @@ export default class UserController {
   }
 
   static async requestToJoinTeam(req, res) {
-    TeamController.createTeamToUser(req, res, req.body.club_id, req.body.team_name, Status.Pending);
+    TeamController.createTeamToUser(req, res, req.body.user_data.user_id, req.body.club_id, req.body.team_name, Status.Pending);
   }
 
   static async getUserClubs(req, res) {

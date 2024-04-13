@@ -66,6 +66,8 @@ router.route("/club/get-all").post(Authorize.loggedIn, ClubController.getAllClub
 
 router.route("/club/team/get-teams").post(Authorize.loggedIn, TeamController.getTeamsByClubId);
 
+router.route("/club/team/join").post(Authorize.loggedIn, TeamController.joinTeam);
+
 router.route("/user/get-token-data").post(Authorize.loggedIn, Authorize.getTokenDataAsResponse);
 
 router.route("/user/get-clubs").post(Authorize.loggedIn, UserController.getUserClubs);

@@ -18,7 +18,7 @@ export default class TeamController {
         handleError(res, Errors[500].InternalServerError);
       } else {
         console.log(rows);
-        TeamController.createTeamToUser(req, res, club_id, name, Status.Approved);
+        TeamController.createTeamToUser(req, res, req.body.user_data.user_id, club_id, name, Status.Approved);
       }
     });
   }
@@ -27,27 +27,20 @@ export default class TeamController {
     await TeamController.createTeamByName(req, res, req.body.name, req.body.club_id);
   }
 
-  static async createTeamToUser(req, res, club_id, team_name, status) {
-    Authorize.getTokenData(req, res, (err, rows, columns) => {
-      if (err) {
-        console.error(err);
-        handleError(res, Errors[500].InternalServerError);
-      } else {
-        let sql = `INSERT INTO team_to_user (user_id, club_id, team_name, status) VALUES (
-          "${rows[0].user_id}",
+  static async createTeamToUser(req, res, user_id, club_id, team_name, status) {
+    let sql = `INSERT INTO team_to_user (user_id, club_id, team_name, status) VALUES (
+          "${user_id}",
           "${club_id}",
           "${team_name}",
           "${status}"
         );`;
 
-        MySQLConnection.makeQuery(sql, (err, rows, columns) => {
-          if (err) {
-            console.error(err);
-            handleError(res, Errors[500].InternalServerError);
-          } else {
-            res.send({ columns: columns, rows: rows });
-          }
-        });
+    MySQLConnection.makeQuery(sql, (err, rows, columns) => {
+      if (err) {
+        console.error(err);
+        handleError(res, Errors[500].InternalServerError);
+      } else {
+        res.send({ columns: columns, rows: rows });
       }
     });
   }
@@ -107,12 +100,8 @@ export default class TeamController {
                 userTeamsStr.push(team_to_user.team_name);
               }
             });
-            console.log(userTeamsStr);
             allTeamsStr.forEach((team) => {
               let in_team = userTeamsStr.includes(team);
-              console.log(team);
-
-              console.log(in_team);
               teams.push({ team_name: team, user_in_team: in_team });
             });
             res.send(teams);
@@ -120,5 +109,14 @@ export default class TeamController {
         });
       }
     });
+  }
+
+  static joinTeam(req, res) {
+    let data = req.body.user_data;
+    let user_id = data.user_id;
+    let club_id = req.body.club_id;
+    let team_name = req.body.team_name;
+
+    TeamController.createTeamToUser(req, res, user_id, club_id, team_name, Status.Pending);
   }
 }
