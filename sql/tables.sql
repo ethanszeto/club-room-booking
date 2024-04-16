@@ -113,3 +113,18 @@ CREATE TABLE meeting (
         ON UPDATE CASCADE ON DELETE CASCADE,
 	PRIMARY KEY(room_id, start_time, end_time, meeting_date)
 );
+
+DELIMITER $$
+
+CREATE TRIGGER update_num_members
+AFTER INSERT ON team_to_user
+FOR EACH ROW
+BEGIN
+    UPDATE team
+    SET num_members = num_members + 1
+    WHERE team_name = NEW.team_name AND club_id = NEW.club_id;
+END;
+$$
+
+DELIMITER ;
+
