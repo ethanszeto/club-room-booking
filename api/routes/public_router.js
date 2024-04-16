@@ -93,4 +93,6 @@ router.route("/meeting/get-rooms").post(Authorize.loggedIn, MeetingController.ge
 
 router.route("/meeting/get-meetings-by-dates").post(Authorize.loggedIn, MeetingController.getMeetingsByDates);
 
+router.route("/meeting/book-meetings").post(Authorize.loggedIn, MeetingController.bookMeetings);
+
 export default router;

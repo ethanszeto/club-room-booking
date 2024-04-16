@@ -3,13 +3,13 @@ document.getElementById("select-team").addEventListener("change", loadRoomTypes)
 document.getElementById("select-room-type").addEventListener("change", loadBuildings);
 document.getElementById("select-building").addEventListener("change", loadRooms);
 document.getElementById("select-meeting-type").addEventListener("change", changeMeetingDateOptions);
-
+document.getElementById("submit-meeting").addEventListener("click", validateAndBookMeeting);
 document.getElementById("select-room").addEventListener("change", loadAvailabilities);
-document.getElementById("select-room").addEventListener("change", loadAvailabilities);
-document.getElementById("select-room").addEventListener("change", loadAvailabilities);
-document.getElementById("select-room").addEventListener("change", loadAvailabilities);
-document.getElementById("select-room").addEventListener("change", loadAvailabilities);
-document.getElementById("select-room").addEventListener("change", loadAvailabilities);
+document.getElementById("start-time").addEventListener("change", loadAvailabilities);
+document.getElementById("end-time").addEventListener("change", loadAvailabilities);
+document.getElementById("select-date").addEventListener("change", loadAvailabilities);
+document.getElementById("select-start-date").addEventListener("change", loadAvailabilities);
+document.getElementById("select-end-date").addEventListener("change", loadAvailabilities);
 
 window.addEventListener("load", loadClubs);
 
@@ -160,59 +160,116 @@ async function loadRooms() {
 }
 
 async function loadAvailabilities() {
-  // start end room id
+  let availability = validateAllInputsForAvailability();
+  if (!availability) {
+    return;
+  }
+
+  let response = await request(
+    "POST",
+    { room_id: availability.room_id, start_date: availability.start_date, end_date: availability.end_date },
+    "/meeting/get-meetings-by-dates"
+  );
+  if (response.error) {
+    console.error(response.error);
+  } else {
+    if (response.rows) {
+      document.getElementById("availabilities-display").innerHTML = "";
+      response.rows.forEach((meeting) => {
+        let meetingText = document.createElement("p");
+        meetingText.innerHTML = `Room already booked on: ${meeting.meeting_date} from ${meeting.start_time} to ${meeting.end_time}`;
+        document.getElementById("availabilities-display").appendChild(meetingText);
+      });
+    }
+  }
+}
+
+function validateAllInputsForAvailability() {
+  let roomId = document.getElementById("select-room").value;
+  let startTime = document.getElementById("start-time").value;
+  let endTime = document.getElementById("end-time").value;
   let state = document.getElementById("select-meeting-type").value;
-  document.getElementById("date-select-content").innerHTML = "";
-  let startDate, endDate, weekday;
   if (state == "single") {
-    startDate = document.getElementById();
+    let date = document.getElementById("select-date").value;
+    console.log({ room_id: roomId, start_date: date, end_date: date, start_time: startTime, end_time: endTime, weekday: false });
+    return roomId && startTime && endTime && date
+      ? { room_id: roomId, start_date: date, end_date: date, start_time: startTime, end_time: endTime, weekday: false }
+      : false;
+  } else {
+    let startDate = document.getElementById("select-start-date").value;
+    let endDate = document.getElementById("select-end-date").value;
+    let weekday = document.getElementById("select-weekday").value;
+    console.log({
+      room_id: roomId,
+      start_date: startDate,
+      end_date: endDate,
+      start_time: startTime,
+      end_time: endTime,
+      weekday: weekday,
+    });
+    return roomId && startTime && endTime && startDate && endDate && weekday != undefined
+      ? { room_id: roomId, start_date: startDate, end_date: endDate, start_time: startTime, end_time: endTime, weekday: weekday }
+      : false;
   }
 }
 
 function changeMeetingDateOptions() {
   let state = document.getElementById("select-meeting-type").value;
-  document.getElementById("date-select-content").innerHTML = "";
+  console.log(state);
   if (state == "single") {
-    let dateInput = document.createElement("input");
-    dateInput.setAttribute("type", "date");
-    dateInput.setAttribute("id", "select-date");
-    let dateLabel = document.createElement("p");
-    dateLabel.innerHTML = "Select Date:";
-    document.getElementById("date-select-content").appendChild(dateLabel);
-    document.getElementById("date-select-content").appendChild(dateInput);
+    document.getElementById("date-select-content-recurring").style.display = "none";
+    document.getElementById("date-select-content-single").style.display = "block";
     document.getElementById("select-weekday-content").style.display = "none";
   } else {
-    let dateStartInput = document.createElement("input");
-    dateStartInput.setAttribute("type", "date");
-    dateStartInput.setAttribute("id", "select-start-date");
-    let startLabel = document.createElement("p");
-    startLabel.innerHTML = "Select Start Date:";
-    document.getElementById("date-select-content").appendChild(startLabel);
-    document.getElementById("date-select-content").appendChild(dateStartInput);
-
-    let dateEndInput = document.createElement("input");
-    dateEndInput.setAttribute("type", "date");
-    dateEndInput.setAttribute("id", "select-end-date");
-    let endLabel = document.createElement("p");
-    endLabel.innerHTML = "Select End Date:";
-    document.getElementById("date-select-content").appendChild(endLabel);
-    document.getElementById("date-select-content").appendChild(dateEndInput);
-
+    document.getElementById("date-select-content-recurring").style.display = "block";
+    document.getElementById("date-select-content-single").style.display = "none";
     document.getElementById("select-weekday-content").style.display = "block";
   }
 }
 
+async function validateAndBookMeeting() {
+  let availability = validateAllInputsForAvailability();
+  if (!availability) {
+    document.getElementById("error-display").innerHTML = "Please fill out all fields before submitting.";
+    return;
+  }
+
+  let dates;
+  if (availability.weekday != undefined) {
+    dates = generateMeetingDates(availability.start_date, availability.end_date, parseInt(availability.weekday));
+  } else {
+    dates = [availability.start_date];
+  }
+
+  confirmAvailability(
+    dates,
+    availability.start_time,
+    availability.end_time,
+    availability.start_date,
+    availability.end_date,
+    availability.room_id
+  );
+}
+
+function formatDate(date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
 function generateMeetingDates(startDate, endDate, dayOfWeek) {
+  startDate = new Date(startDate);
+  endDate = new Date(endDate);
   const dates = [];
-  let currentDate = new Date(startDate);
+  let currentDate = new Date(startDate.getTime()); // Create a new Date object to avoid reference issues
 
   // Loop through dates between start and end dates
   while (currentDate <= endDate) {
-    if (currentDate.getDay() === dayOfWeek) {
-      dates.push(new Date(currentDate)); // Add the date if it matches the specified day of week
-      currentDate.setDate(currentDate.getDate() + 7); // Move to the next week
+    if (currentDate.getDay() == dayOfWeek) {
+      dates.push(formatDate(currentDate)); // Format date and add to the array
     }
-    currentDate.setDate(currentDate.getDate() + 1); // Move to the next day if before day of week
+    currentDate.setDate(currentDate.getDate() + 1);
   }
 
   return dates;
@@ -228,12 +285,21 @@ function generateMeetingDates(startDate, endDate, dayOfWeek) {
  * @param {Int} roomId
  */
 async function confirmAvailability(mtbDates, mtbStartTime, mtbEndTime, dateSlotStart, dateSlotEnd, roomId) {
-  let response = await request("POST", { start_date: dateSlotStart, end_date: dateSlotEnd, room_id: roomId }, "/meeting/get");
+  let response = await request(
+    "POST",
+    { start_date: dateSlotStart, end_date: dateSlotEnd, room_id: roomId },
+    "/meeting/get-meetings-by-dates"
+  );
   if (response.error) {
     console.log(response.error);
   } else {
     console.log(response);
-    if (response.rows) {
+    if (!response.rows) {
+      return;
+    }
+    console.log(mtbDates);
+    if (!mtbDates) {
+      document.getElementById("error-display").innerHTML = "Invalid timeslots - no meetings to book.";
       return;
     }
 
@@ -244,8 +310,6 @@ async function confirmAvailability(mtbDates, mtbStartTime, mtbEndTime, dateSlotS
       let start_time = meeting.start_time;
       let end_time = meeting.end_time;
 
-      console.log(meeting_date == date);
-
       mtbDates.forEach((date) => {
         if (meeting_date == date && start_time < mtbEndTime && end_time > mtbStartTime) {
           document.getElementById("error-display").innerHTML = "Invalid timeslots - already booked";
@@ -255,8 +319,23 @@ async function confirmAvailability(mtbDates, mtbStartTime, mtbEndTime, dateSlotS
     });
 
     if (!invalid) {
-      //book it
+      bookMeeting(mtbDates, mtbStartTime + ":00", mtbEndTime + ":00", roomId);
     }
   }
-  await loadTeams();
+}
+
+async function bookMeeting(mtbDates, mtbStartTime, mtbEndTime, roomId) {
+  let clubId = document.getElementById("select-club").value;
+  let teamName = document.getElementById("select-team").value;
+  let response = await request(
+    "POST",
+    { dates: mtbDates, start_time: mtbStartTime, end_time: mtbEndTime, room_id: roomId, club_id: clubId, team_name: teamName },
+    "/meeting/book-meetings"
+  );
+
+  if (response.error) {
+    console.log(response.error);
+  } else {
+    console.log("Success!");
+  }
 }

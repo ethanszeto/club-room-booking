@@ -130,32 +130,60 @@ export default class MeetingController {
     let end_time = req.body.end_time;
     let start_date = dates[0];
     let room_id = req.body.room_id;
-    let user_id = req.body.user_id;
+    let user_id = req.body.user_data.user_id;
     let club_id = req.body.club_id;
     let team_name = req.body.team_name;
 
-    let sql = `
-      INSERT INTO meeting_group (start_time, end_time, start_date, room_id, user_id, club_id, team_name) VALUES (
-        ${start_time},
-        ${end_time},
-        ${start_date},
-        ${room_id},
-        ${user_id},
-        ${club_id},
-        ${team_name}
-      );
-    `;
+    try {
+      let sqlGroup = `
+        INSERT INTO meeting_group (start_time, end_time, start_date, room_id, user_id, club_id, team_name) VALUES (
+          "${start_time}",
+          "${end_time}",
+          "${start_date}",
+          ${room_id},
+          ${user_id},
+          ${club_id},
+          "${team_name}"
+        );
+      `;
 
-    MySQLConnection.makeQuery(sql, (err, rows, columns) => {
-      if (err) {
-        console.error(err);
-        return handleError(res, Errors[500].InternalServerError);
-      } else {
-        dates.forEach((date) => {
-          let meetingSql;
+      await new Promise((resolve, reject) => {
+        MySQLConnection.makeQuery(sqlGroup, (err, rows, columns) => {
+          if (err) {
+            console.error(err);
+            reject(err);
+          } else {
+            resolve();
+          }
         });
-        res.send({ columns: columns, rows: rows });
-      }
-    });
+      });
+
+      let meetingPromises = dates.map((date) => {
+        let meetingSql = `
+          INSERT INTO meeting (meeting_date, room_id, start_time, end_time) VALUES (
+            "${date}",
+            ${room_id},
+            "${start_time}",
+            "${end_time}"
+          );
+        `;
+
+        return new Promise((resolve, reject) => {
+          MySQLConnection.makeQuery(meetingSql, (err, rows, columns) => {
+            if (err) {
+              console.error(err);
+              reject(err);
+            } else {
+              resolve();
+            }
+          });
+        });
+      });
+
+      await Promise.all(meetingPromises);
+      res.send("Updates successful");
+    } catch (error) {
+      handleError(res, Errors[500].InternalServerError);
+    }
   }
 }
