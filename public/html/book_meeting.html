@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script defer src="/public/js/api.js"></script>
+    <script defer src="/public/js/dev.js"></script>
+    <script defer src="/public/js/book_meeting.js"></script>
+    <link href="/public/css/book_meeting.css" rel="stylesheet" type="text/css" />
+    <link href="/public/css/dev.css" rel="stylesheet" type="text/css" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h1>Book a meeting for your team!</h1>
+    <div id="content">
+      <div id="clubs" class="panel">
+        <h2>Select a club to book for</h2>
+        <hr />
+        <select id="select-club"></select>
+      </div>
+      <div id="teams" class="panel">
+        <h2>Select a team to book for</h2>
+        <hr />
+        <select id="select-team"></select>
+      </div>
+    </div>
+    <div id="select-meeting-content">
+      <div id="room-types" class="meeting-panel">
+        <p>Select Room Type</p>
+        <select id="select-room-type"></select>
+      </div>
+      <div id="buildings" class="meeting-panel">
+        <p>Select Building</p>
+        <select id="select-building"></select>
+      </div>
+      <div id="rooms" class="meeting-panel">
+        <p>Select Room</p>
+        <select id="select-room"></select>
+      </div>
+      <div id="meeting-type" class="meeting-panel">
+        <p>Select Meeting Type</p>
+        <select id="select-meeting-type">
+          <option value="single">Single Meeting</option>
+          <option value="recurring">Weekly Recurring Meeting</option>
+        </select>
+      </div>
+    </div>
+    <div id="book-meeting-content">
+      <div id="availabilities" class="booking-panel">
+        <p>Room Availabilities</p>
+        <hr />
+        <div id="availabilities-display"></div>
+      </div>
+      <div class="booking-panel">
+        <div id="book-dates" class="booking-info-panel">
+          <p>Book Dates</p>
+          <hr />
+          <div id="date-select-content"></div>
+        </div>
+        <div id="book-times" class="booking-info-panel">
+          <p>Book Times</p>
+          <hr />
+          <div id="select-time-content">
+            <p>Start Time</p>
+            <input id="start-time" type="time" />
+            <p>End Time</p>
+            <input id="end-time" type="time" />
+          </div>
+          <br />
+          <div id="select-weekday-content">
+            <hr />
+            <p>Select a Weekday to Schedule a Recurring Meeting</p>
+            <select id="select-weekday">
+              <option value="1">Monday</option>
+              <option value="2">Tuesday</option>
+              <option value="3">Wednesday</option>
+              <option value="4">Thursday</option>
+              <option value="5">Friday</option>
+              <option value="6">Saturday</option>
+              <option value="0">Sunday</option>
+            </select>
+          </div>
+          <hr />
+          <button id="submit-meeting">Submit</button>
+          <p id="error-display"></p>
+        </div>
+      </div>
+    </div>
+    <div id="dev" class="dev">
+      <textarea id="sql-query" class="input-area"></textarea>
+      <br />
+      <button id="query-button">Make Query</button>
+      <p id="query-output"></p>
+    </div>
+  </body>
+</html>

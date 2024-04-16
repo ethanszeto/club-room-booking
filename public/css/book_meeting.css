@@ -1,0 +1,72 @@
+.panel {
+  margin: 30px 30px 30px 30px;
+  width: 40%;
+  position: relative;
+  border: 1px solid black;
+  top: 0;
+  left: 0;
+}
+
+#content {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  position: relative;
+  justify-content: center;
+  width: 100%;
+}
+
+#book-meeting-content,
+#select-meeting-content {
+  margin: 30px 0px 30px 0px;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  position: relative;
+  justify-content: center;
+  width: 100%;
+}
+
+.meeting-panel {
+  margin: 10px 10px 10px 10px;
+  width: 20%;
+  position: relative;
+  border: 1px solid black;
+  top: 0;
+  left: 0;
+}
+
+.booking-panel {
+  margin: 10px 10px 10px 10px;
+  width: 40%;
+  position: relative;
+  border: 1px solid black;
+  top: 0;
+  left: 0;
+}
+
+.booking-info-panel {
+  margin: 10px 0px 10px 0px;
+  width: 100%;
+  position: relative;
+  border: 1px solid black;
+  top: 0;
+  left: 0;
+}
+
+body {
+  text-align: center;
+}
+
+option {
+  color: red;
+}
+
+select {
+  margin: 0px 10px 10px 10px;
+  max-width: 90%;
+}
+
+hr {
+  width: 75%;
+}

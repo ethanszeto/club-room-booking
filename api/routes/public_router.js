@@ -6,6 +6,7 @@ import QueryController from "../controllers/query_controller.js";
 import UserController from "../controllers/user_controller.js";
 import ClubController from "../controllers/club_controller.js";
 import TeamController from "../controllers/team_controller.js";
+import MeetingController from "../controllers/meeting_controller.js";
 import Authorize from "../auth/authorization.js";
 
 const router = express.Router();
@@ -44,6 +45,10 @@ router.route("/user/approve").get(Authorize.loggedIn, (req, res) => {
   res.sendFile(path.resolve() + "/public/html/approve_user.html");
 });
 
+router.route("/meeting/book").get(Authorize.loggedIn, (req, res) => {
+  res.sendFile(path.resolve() + "/public/html/book_meeting.html");
+});
+
 router.route("/public/js/:script.js").get((req, res) => {
   res.sendFile(path.resolve() + `public/js/${req.params.script}.js)`);
 });
@@ -79,5 +84,13 @@ router.route("/club/team/join").post(Authorize.loggedIn, TeamController.requestJ
 router.route("/club/team/get-user-team-requests").post(Authorize.loggedIn, TeamController.getUserTeamRequests);
 
 router.route("/club/team/post-user-team-updates").post(Authorize.loggedIn, UserController.updateRequestStatus);
+
+router.route("/meeting/get-room-types").post(Authorize.loggedIn, MeetingController.getRoomTypes);
+
+router.route("/meeting/get-buildings").post(Authorize.loggedIn, MeetingController.getBuildingsByRoomType);
+
+router.route("/meeting/get-rooms").post(Authorize.loggedIn, MeetingController.getRoomsByBuildingsAndRoomType);
+
+router.route("/meeting/get-meetings-by-dates").post(Authorize.loggedIn, MeetingController.getMeetingsByDates);
 
 export default router;
