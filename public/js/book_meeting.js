@@ -297,7 +297,10 @@ async function confirmAvailability(mtbDates, mtbStartTime, mtbEndTime, dateSlotS
     if (!response.rows) {
       return;
     }
-    console.log(mtbDates);
+
+    //this validation not working
+    // TODO+ need to validate start time < end time
+    // validate start date < end date at input
     if (!mtbDates) {
       document.getElementById("error-display").innerHTML = "Invalid timeslots - no meetings to book.";
       return;
@@ -311,7 +314,7 @@ async function confirmAvailability(mtbDates, mtbStartTime, mtbEndTime, dateSlotS
       let end_time = meeting.end_time;
 
       mtbDates.forEach((date) => {
-        if (meeting_date == date && start_time < mtbEndTime && end_time > mtbStartTime) {
+        if (new Date(meeting_date).getTime() == new Date(date).getTime() && start_time < mtbEndTime && end_time > mtbStartTime) {
           document.getElementById("error-display").innerHTML = "Invalid timeslots - already booked";
           invalid = true;
         }
