@@ -265,7 +265,9 @@ export default class MeetingController {
       meeting_group.room_id,
       meeting_group.user_id,
       meeting_group.club_id,
-      meeting_group.team_name;
+      meeting_group.team_name
+      ORDER BY meeting_group.start_date ASC,
+      meeting_group.start_time ASC;
     `;
 
     MySQLConnection.makeQuery(sql, async (err, rows, columns) => {

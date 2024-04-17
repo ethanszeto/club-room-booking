@@ -114,7 +114,7 @@ async function loadMeetings() {
         meetingDates.forEach((date) => {
           let dateBlock = document.createElement("div");
           let dateText = document.createElement("p");
-          dateText.innerHTML = new Date(date).toDateString();
+          dateText.innerHTML = new Date(new Date(date).getTime() + 24 * 60 * 60 * 1000).toDateString();
           dateBlock.classList.add("date-panel");
           dateBlock.appendChild(dateText);
           meetingGroupDatesDiv.appendChild(dateBlock);
