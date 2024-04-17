@@ -2,6 +2,7 @@ import MySQLConnection from "../db/connect.js";
 import Errors from "../error/errors.js";
 import TeamController from "./team_controller.js";
 import handleError from "../error/error_handler.js";
+import Status from "../enum/status.js";
 
 export default class ClubController {
   static async createClub(req, res) {
@@ -49,6 +50,7 @@ export default class ClubController {
       JOIN team ON club.club_id = team.club_id
       JOIN team_to_user ON team.team_name = team_to_user.team_name AND team.club_id = team_to_user.club_id
       JOIN user ON team_to_user.user_id = ${data.user_id}
+      WHERE team_to_user.status = "${Status.Approved}"
       ORDER BY club_name ASC;
     `;
 

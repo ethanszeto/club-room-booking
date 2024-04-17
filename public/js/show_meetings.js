@@ -4,7 +4,7 @@ document.getElementById("select-team").addEventListener("change", loadMeetings);
 window.addEventListener("load", loadClubs);
 
 async function loadClubs() {
-  let response = await request("POST", {}, "/club/get-all");
+  let response = await request("POST", {}, "/user/get-clubs");
   if (response.error) {
     console.log(response.error);
     alert("Something went wrong.");
@@ -100,6 +100,7 @@ async function loadMeetings() {
 
         inputSubmit.setAttribute("type", "submit");
         inputSubmit.setAttribute("value", "Delete Meetings");
+        inputSubmit.classList.add("btn");
 
         form.appendChild(inputRoomId);
         form.appendChild(inputStartTime);

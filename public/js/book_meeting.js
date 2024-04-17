@@ -19,13 +19,13 @@ window.addEventListener("load", loadClubs);
 changeMeetingDateOptions();
 
 async function loadClubs() {
-  let response = await request("POST", {}, "/club/get-all");
+  let response = await request("POST", {}, "/user/get-clubs");
   if (response.error) {
     console.log(response.error);
     alert("Something went wrong.");
     window.location.href = "/";
   } else {
-    console.log(response);
+    //console.log(response);
     response.rows.forEach((club) => {
       let option = document.createElement("option");
       option.value = club.club_id;
@@ -368,9 +368,9 @@ async function confirmAvailability(mtbDates, mtbStartTime, mtbEndTime, dateSlotS
             document.getElementById("error-display").innerHTML = "Invalid timeslots - already booked";
           }
           let meetingText = document.createElement("p");
-          meetingText.innerHTML = `Room already booked on: ${new Date(new Date(meeting.meeting_date).getTime() + 24 * 60 * 60 * 1000).toDateString()} from ${timeConversion(
-            meeting.start_time
-          )} to ${timeConversion(meeting.end_time)}`;
+          meetingText.innerHTML = `Room already booked on: ${new Date(
+            new Date(meeting.meeting_date).getTime() + 24 * 60 * 60 * 1000
+          ).toDateString()} from ${timeConversion(meeting.start_time)} to ${timeConversion(meeting.end_time)}`;
           document.getElementById("availabilities-display").appendChild(meetingText);
         }
       });
