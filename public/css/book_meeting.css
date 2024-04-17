@@ -1,7 +1,15 @@
+#container {
+  padding: 50px 50px 50px 50px;
+  margin: 0px 20px 20px 20px;
+  border-radius: 7px;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+}
+
 .panel {
   margin: 30px 30px 30px 30px;
   width: 40%;
   position: relative;
+  border-radius: 7px;
   border: 1px solid black;
   top: 0;
   left: 0;
@@ -31,24 +39,32 @@
   margin: 10px 10px 10px 10px;
   width: 20%;
   position: relative;
+  border-radius: 7px;
   border: 1px solid black;
   top: 0;
   left: 0;
 }
 
 .booking-panel {
-  margin: 10px 10px 10px 10px;
+  margin: 0px 10px 10px 10px;
   width: 40%;
   position: relative;
-  border: 1px solid black;
-  top: 0;
-  left: 0;
 }
 
 .booking-info-panel {
   margin: 10px 0px 10px 0px;
   width: 100%;
   position: relative;
+  border-radius: 7px;
+  border: 1px solid black;
+  top: 0;
+  left: 0;
+}
+
+#availabilities {
+  margin: 10px 10px 10px 10px;
+  position: relative;
+  border-radius: 7px;
   border: 1px solid black;
   top: 0;
   left: 0;
