@@ -8,6 +8,7 @@
     <script defer src="/public/js/create_team.js"></script>
     <link href="/public/css/master.css" rel="stylesheet" type="text/css" />
     <link href="/public/css/navbar.css" rel="stylesheet" type="text/css" />
+    <link href="/public/css/create_team.css" rel="stylesheet" type="text/css" />
     <link href="/public/css/dev.css" rel="stylesheet" type="text/css" />
     <title>Create Team</title>
   </head>
@@ -24,14 +25,15 @@
       <a class="btn abutton navbar-button" href="/club/team/create">Create a team</a>
       <a class="btn abutton navbar-button" href="/user/logout">Log out</a>
     </div>
-    <div>
+    <div id="create-team-panel">
       <h1>Create Team!</h1>
       <p>Select a Club to make the team for:</p>
       <select id="select-club"></select>
       <p>Team Name:</p>
-      <input id="team-name" type="text" />
-      <button id="create-team">Submit</button>
+      <input id="team-name" type="text" placeholder="Team Name" />
+      <button class="btn" id="create-team">Submit</button>
       <p id="get-club-error-display"></p>
+      <p id="create-team-message"></p>
     </div>
     <div id="dev" class="dev">
       <textarea id="sql-query" class="input-area"></textarea>
