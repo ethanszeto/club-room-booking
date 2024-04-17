@@ -26,5 +26,7 @@ async function createTeam() {
     document.getElementById("get-club-error-display").innerHTML = "Failed to create team. Try again.";
   } else {
     console.log("success");
+    document.getElementById("team-name").value = "";
+    document.getElementById("create-team-message").innerHTML = "Successfully created team!";
   }
 }
