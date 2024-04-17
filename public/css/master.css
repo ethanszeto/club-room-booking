@@ -31,6 +31,12 @@ body {
 }
 
 input {
+  font-family: Monaco, monospace;
+  font-size: 18px;
+}
+
+select {
+  font-family: Monaco, monospace;
   font-size: 18px;
 }
 

@@ -7,7 +7,9 @@ const handleError = (res, error) => {
       res.send({ error: "Bad Request" });
       break;
     case Errors[401].Unauthorized:
-      res.send({ error: "Please log in to access that page." });
+      // no login
+      //res.send({ error: "Please log in to access that page." });
+      res.redirect("/user/login");
       break;
     case Errors[401].LoginFailed:
       res.send({ error: "Failed to login in with the given credentials." });

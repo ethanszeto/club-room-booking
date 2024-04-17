@@ -1,4 +1,5 @@
 document.getElementById("select-club").addEventListener("change", loadTeams);
+document.getElementById("select-team").addEventListener("change", loadMeetings);
 
 window.addEventListener("load", loadClubs);
 
@@ -48,7 +49,7 @@ async function loadMeetings() {
   let clubId = document.getElementById("select-club").value;
   let teamName = document.getElementById("select-team").value;
   let response = await request("POST", { club_id: clubId, team_name: teamName }, "/meeting/get-meetings-by-team");
-
+  document.getElementById("meeting-group-display").innerHTML = "";
   if (response.error) {
     console.log(response.error);
     alert("Something went wrong.");
