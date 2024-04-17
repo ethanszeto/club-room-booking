@@ -23,7 +23,7 @@ async function loadClubs() {
   if (response.error) {
     console.log(response.error);
     alert("Something went wrong.");
-    window.location.href = "/";
+    window.location.href = "/user/profile";
   } else {
     //console.log(response);
     response.rows.forEach((club) => {
@@ -43,7 +43,7 @@ async function loadTeams() {
   if (response.error) {
     console.log(response.error);
     alert("Something went wrong.");
-    window.location.href = "/";
+    window.location.href = "/user/profile";
   } else {
     console.log(response);
     document.getElementById("select-team").innerHTML = "";
@@ -65,7 +65,7 @@ async function loadRoomTypes() {
   if (response.error) {
     console.log(response.error);
     alert("Something went wrong.");
-    window.location.href = "/";
+    window.location.href = "/user/profile";
   } else {
     console.log(response);
     if (response.rows) {
@@ -107,7 +107,7 @@ async function loadBuildings() {
   if (response.error) {
     console.log(response.error);
     alert("Something went wrong.");
-    window.location.href = "/";
+    window.location.href = "/user/profile";
   } else {
     console.log(response);
     if (response.rows) {
@@ -157,7 +157,7 @@ async function loadRooms() {
   if (response.error) {
     console.log(response.error);
     alert("Something went wrong.");
-    window.location.href = "/";
+    window.location.href = "/user/profile";
   } else {
     console.log(response);
     if (response.rows) {
@@ -336,7 +336,7 @@ async function confirmAvailability(mtbDates, mtbStartTime, mtbEndTime, dateSlotS
   if (response.error) {
     console.log(response.error);
     alert("Something went wrong.");
-    window.location.href = "/";
+    window.location.href = "/user/profile";
   } else {
     console.log(response);
     document.getElementById("availabilities-display").innerHTML = "";
@@ -400,7 +400,7 @@ async function bookMeeting(mtbDates, mtbStartTime, mtbEndTime, roomId) {
   if (response.error) {
     console.log(response.error);
     alert("Something went wrong.");
-    window.location.href = "/";
+    window.location.href = "/user/profile";
   } else {
     console.log("Success!");
     document.getElementById("error-display").innerHTML = "Successfully booked meeting(s)!";

@@ -8,7 +8,7 @@ async function loadClubs() {
   if (response.error) {
     console.log(response.error);
     alert("Something went wrong.");
-    window.location.href = "/";
+    window.location.href = "/user/profile";
   } else {
     console.log(response);
     response.rows.forEach((club) => {
@@ -28,7 +28,7 @@ async function loadTeams() {
   if (response.error) {
     console.log(response.error);
     alert("Something went wrong.");
-    window.location.href = "/";
+    window.location.href = "/user/profile";
   } else {
     console.log(response);
     document.getElementById("select-team").innerHTML = "";
@@ -53,7 +53,7 @@ async function loadMeetings() {
   if (response.error) {
     console.log(response.error);
     alert("Something went wrong.");
-    window.location.href = "/";
+    window.location.href = "/user/profile";
   } else {
     console.log(response);
     if (response.rows) {

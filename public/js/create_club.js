@@ -6,7 +6,7 @@ async function createClub() {
   if (response.error) {
     console.log(response.error);
     alert("Something went wrong. Try a different club name.");
-    window.location.href = "/";
+    window.location.href = "/user/profile";
   } else {
     document.getElementById("create-club-message").innerHTML = "Successfully created club!";
     document.getElementById("club-name").value = "";
