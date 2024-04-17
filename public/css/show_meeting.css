@@ -2,6 +2,15 @@ body {
   text-align: center;
 }
 
+#content {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  position: relative;
+  justify-content: center;
+  width: 100%;
+}
+
 .panel {
   margin: 10px 10px 10px 10px;
   padding: 10px 10px 10px 10px;
