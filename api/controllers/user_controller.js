@@ -126,6 +126,12 @@ export default class UserController {
       handleError(res, Errors[500].InternalServerError);
     }
   }
+
+  static logout(req, res) {
+    res.clearCookie("token");
+    res.redirect("/user/login");
+    console.log("Signed out");
+  }
 }
 
 /*

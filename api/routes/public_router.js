@@ -25,6 +25,8 @@ router.route("/user/login").get((req, res) => {
   res.sendFile(path.resolve() + "/public/html/login.html");
 });
 
+router.route("/user/logout").get(UserController.logout);
+
 router.route("/user/profile").get(Authorize.loggedIn, (req, res) => {
   res.sendFile(path.resolve() + "/public/html/profile.html");
 });
