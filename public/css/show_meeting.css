@@ -11,17 +11,38 @@ body {
   width: 100%;
 }
 
+#meetings-content {
+  padding: 50px 50px 50px 50px;
+  margin: 0px 20px 20px 20px;
+  border-radius: 7px;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+}
+
 .panel {
   margin: 10px 10px 10px 10px;
   padding: 10px 10px 10px 10px;
-  width: 20%;
+  width: 30%;
+  position: relative;
+  /* border: 1px solid black; */
+  border-radius: 7px;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+  top: 0;
+  left: 0;
+}
+
+.menu-panel {
+  margin: 10px 10px 10px 10px;
+  padding: 10px 10px 10px 10px;
+  width: 40%;
   position: relative;
   border: 1px solid black;
+  border-radius: 7px;
   top: 0;
   left: 0;
 }
 
 #meeting-group-display {
+  margin-top: 50px;
   display: flex;
   flex-wrap: wrap;
   flex-direction: row;

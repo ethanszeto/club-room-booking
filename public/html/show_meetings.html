@@ -25,21 +25,24 @@
       <a class="btn abutton navbar-button" href="/club/team/create">Create a team</a>
       <a class="btn abutton navbar-button" href="/user/logout">Log out</a>
     </div>
-    <h1>Meetings</h1>
-    <div id="content">
-      <div id="clubs" class="panel">
-        <h2>Select a club to see meetings for</h2>
-        <hr />
-        <select id="select-club"></select>
+    <div id="meetings-content">
+      <h1>Meetings</h1>
+      <div id="content">
+        <div id="clubs" class="menu-panel">
+          <h2>Select a club to see meetings for</h2>
+          <hr />
+          <select id="select-club"></select>
+        </div>
+        <div id="teams" class="menu-panel">
+          <h2>Select a team to see meetings for</h2>
+          <hr />
+          <select id="select-team"></select>
+        </div>
       </div>
-      <div id="teams" class="panel">
-        <h2>Select a team to see meetings for</h2>
-        <hr />
-        <select id="select-team"></select>
-      </div>
+      <hr />
+      <div id="meeting-group-display"></div>
     </div>
-    <hr />
-    <div id="meeting-group-display"></div>
+
     <div id="dev" class="dev">
       <textarea id="sql-query" class="input-area"></textarea>
       <br />
