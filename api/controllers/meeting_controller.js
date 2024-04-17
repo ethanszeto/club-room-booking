@@ -186,4 +186,51 @@ export default class MeetingController {
       handleError(res, Errors[500].InternalServerError);
     }
   }
+
+  static async getMeetingsByTeam(req, res) {
+    let team_name = req.body.team_name;
+    let club_id = req.body.club_id;
+
+    let sql = `
+      SELECT
+        meeting_group.start_time,
+        meeting_group.end_time,
+        meeting_group.start_date,
+        meeting_group.room_id,
+        meeting_group.user_id,
+        meeting_group.club_id,
+        meeting_group.team_name,
+        GROUP_CONCAT(meeting.meeting_date ORDER BY meeting.meeting_date ASC)
+      FROM meeting_group
+      JOIN meeting ON meeting_group.group_id = meeting.group_id
+      WHERE meeting_group.club_id = ${club_id}
+      AND meeting_group.team_name = "${team_name}";
+    `;
+
+    MySQLConnection.makeQuery(sql, (err, rows, columns) => {
+      if (err) {
+        console.error(err);
+        return handleError(res, Errors[500].InternalServerError);
+      } else {
+        res.send({ columns: columns, rows: rows });
+      }
+    });
+  }
+
+  static async deleteMeetingGroup(req, res) {
+    let group_id = req.body.group_id;
+
+    let sql = `
+      DELETE FROM meeting_group WHERE group_id = ${group_id};
+    `;
+
+    MySQLConnection.makeQuery(sql, (err, rows, columns) => {
+      if (err) {
+        console.error(err);
+        return handleError(res, Errors[500].InternalServerError);
+      } else {
+        res.send({ columns: columns, rows: rows });
+      }
+    });
+  }
 }

@@ -10,6 +10,9 @@ document.getElementById("end-time").addEventListener("change", loadAvailabilitie
 document.getElementById("select-date").addEventListener("change", loadAvailabilities);
 document.getElementById("select-start-date").addEventListener("change", loadAvailabilities);
 document.getElementById("select-end-date").addEventListener("change", loadAvailabilities);
+document.getElementById("select-building").addEventListener("change", loadAvailabilities);
+document.getElementById("select-room-type").addEventListener("change", loadAvailabilities);
+document.getElementById("select-weekday").addEventListener("change", loadAvailabilities);
 
 window.addEventListener("load", loadClubs);
 
@@ -160,28 +163,33 @@ async function loadRooms() {
 }
 
 async function loadAvailabilities() {
+  document.getElementById("error-display").innerHTML = "";
   let availability = validateAllInputsForAvailability();
   if (!availability) {
+    document.getElementById("error-display").innerHTML = "Please fill out all fields before submitting.";
     return;
   }
 
-  let response = await request(
-    "POST",
-    { room_id: availability.room_id, start_date: availability.start_date, end_date: availability.end_date },
-    "/meeting/get-meetings-by-dates"
-  );
-  if (response.error) {
-    console.error(response.error);
+  let dates;
+  if (parseInt(availability.weekday) >= 0 && parseInt(availability.weekday) <= 6) {
+    dates = generateMeetingDates(availability.start_date, availability.end_date, parseInt(availability.weekday));
+    console.log("In recurring: " + dates);
   } else {
-    if (response.rows) {
-      document.getElementById("availabilities-display").innerHTML = "";
-      response.rows.forEach((meeting) => {
-        let meetingText = document.createElement("p");
-        meetingText.innerHTML = `Room already booked on: ${meeting.meeting_date} from ${meeting.start_time} to ${meeting.end_time}`;
-        document.getElementById("availabilities-display").appendChild(meetingText);
-      });
-    }
+    console.log("In single");
+    dates = [availability.start_date];
   }
+
+  console.log(dates);
+
+  confirmAvailability(
+    dates,
+    availability.start_time,
+    availability.end_time,
+    availability.start_date,
+    availability.end_date,
+    availability.room_id,
+    false
+  );
 }
 
 function validateAllInputsForAvailability() {
@@ -207,7 +215,7 @@ function validateAllInputsForAvailability() {
       end_time: endTime,
       weekday: weekday,
     });
-    return roomId && startTime && endTime && startDate && endDate && weekday != undefined
+    return roomId && startTime && endTime && startDate && endDate && parseInt(weekday) >= 0 && parseInt(weekday) <= 6
       ? { room_id: roomId, start_date: startDate, end_date: endDate, start_time: startTime, end_time: endTime, weekday: weekday }
       : false;
   }
@@ -235,7 +243,7 @@ async function validateAndBookMeeting() {
   }
 
   let dates;
-  if (availability.weekday != undefined) {
+  if (parseInt(availability.weekday) >= 0 && parseInt(availability.weekday) <= 6) {
     dates = generateMeetingDates(availability.start_date, availability.end_date, parseInt(availability.weekday));
   } else {
     dates = [availability.start_date];
@@ -247,7 +255,8 @@ async function validateAndBookMeeting() {
     availability.end_time,
     availability.start_date,
     availability.end_date,
-    availability.room_id
+    availability.room_id,
+    true
   );
 }
 
@@ -275,6 +284,28 @@ function generateMeetingDates(startDate, endDate, dayOfWeek) {
   return dates;
 }
 
+function timeConversion(time24) {
+  // Splitting the time string into hours and minutes
+  var timeParts = time24.split(":");
+  var hours = parseInt(timeParts[0]);
+  var minutes = parseInt(timeParts[1]);
+
+  // Determining AM or PM
+  var period = hours >= 12 ? "PM" : "AM";
+
+  // Converting hours to 12-hour format
+  hours = hours % 12;
+  hours = hours ? hours : 12; // '0' should be converted to '12'
+
+  // Adding leading zeros to minutes if necessary
+  minutes = minutes < 10 ? "0" + minutes : minutes;
+
+  // Forming the 12-hour time string
+  var time12 = hours + ":" + minutes + " " + period;
+
+  return time12;
+}
+
 /**
  *
  * @param {List[Date]} mtbDates
@@ -284,7 +315,7 @@ function generateMeetingDates(startDate, endDate, dayOfWeek) {
  * @param {Date} timeSlotEnd
  * @param {Int} roomId
  */
-async function confirmAvailability(mtbDates, mtbStartTime, mtbEndTime, dateSlotStart, dateSlotEnd, roomId) {
+async function confirmAvailability(mtbDates, mtbStartTime, mtbEndTime, dateSlotStart, dateSlotEnd, roomId, submitting) {
   let response = await request(
     "POST",
     { start_date: dateSlotStart, end_date: dateSlotEnd, room_id: roomId },
@@ -294,20 +325,23 @@ async function confirmAvailability(mtbDates, mtbStartTime, mtbEndTime, dateSlotS
     console.log(response.error);
   } else {
     console.log(response);
+    document.getElementById("availabilities-display").innerHTML = "";
     if (!response.rows) {
       return;
     }
 
-    //this validation not working
-    // TODO+ need to validate start time < end time
-    // validate start date < end date at input
-    if (!mtbDates) {
-      document.getElementById("error-display").innerHTML = "Invalid timeslots - no meetings to book.";
+    if (mtbStartTime >= mtbEndTime) {
+      document.getElementById("error-display").innerHTML = "Invalid timeslots - cannot have end time before start time!";
+      return;
+    }
+
+    console.log(mtbDates);
+    if (!mtbDates.length) {
+      document.getElementById("error-display").innerHTML = "Invalid timeslots - no meetings to book within date range.";
       return;
     }
 
     let invalid = false;
-
     response.rows.forEach((meeting) => {
       let meeting_date = meeting.meeting_date;
       let start_time = meeting.start_time;
@@ -315,13 +349,26 @@ async function confirmAvailability(mtbDates, mtbStartTime, mtbEndTime, dateSlotS
 
       mtbDates.forEach((date) => {
         if (new Date(meeting_date).getTime() == new Date(date).getTime() && start_time < mtbEndTime && end_time > mtbStartTime) {
-          document.getElementById("error-display").innerHTML = "Invalid timeslots - already booked";
           invalid = true;
+          if (submitting) {
+            document.getElementById("error-display").innerHTML = "Invalid timeslots - already booked";
+          }
+          let meetingText = document.createElement("p");
+          meetingText.innerHTML = `Room already booked on: ${new Date(meeting.meeting_date).toDateString()} from ${timeConversion(
+            meeting.start_time
+          )} to ${timeConversion(meeting.end_time)}`;
+          document.getElementById("availabilities-display").appendChild(meetingText);
         }
       });
     });
 
     if (!invalid) {
+      let meetingText = document.createElement("p");
+      meetingText.innerHTML = "No conflicts!";
+      document.getElementById("availabilities-display").appendChild(meetingText);
+    }
+
+    if (!invalid && submitting) {
       bookMeeting(mtbDates, mtbStartTime + ":00", mtbEndTime + ":00", roomId);
     }
   }
@@ -340,5 +387,6 @@ async function bookMeeting(mtbDates, mtbStartTime, mtbEndTime, roomId) {
     console.log(response.error);
   } else {
     console.log("Success!");
+    document.getElementById("error-display").innerHTML = "Successfully booked meeting(s)!";
   }
 }

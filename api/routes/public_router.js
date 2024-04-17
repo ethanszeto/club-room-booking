@@ -49,6 +49,10 @@ router.route("/meeting/book").get(Authorize.loggedIn, (req, res) => {
   res.sendFile(path.resolve() + "/public/html/book_meeting.html");
 });
 
+router.route("/meeting/show").get(Authorize.loggedIn, (req, res) => {
+  res.sendFile(path.resolve() + "/public/html/show_meetings.html");
+});
+
 router.route("/public/js/:script.js").get((req, res) => {
   res.sendFile(path.resolve() + `public/js/${req.params.script}.js)`);
 });
@@ -94,5 +98,9 @@ router.route("/meeting/get-rooms").post(Authorize.loggedIn, MeetingController.ge
 router.route("/meeting/get-meetings-by-dates").post(Authorize.loggedIn, MeetingController.getMeetingsByDates);
 
 router.route("/meeting/book-meetings").post(Authorize.loggedIn, MeetingController.bookMeetings);
+
+router.route("/meeting/get-meetings-by-team").post(Authorize.loggedIn, MeetingController.getMeetingsByTeam);
+
+router.route("/meeting/delete-meeting").post(Authorize.loggedIn, MeetingController.deleteMeetingGroup);
 
 export default router;

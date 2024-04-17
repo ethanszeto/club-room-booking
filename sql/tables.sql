@@ -104,12 +104,13 @@ CREATE TABLE meeting_group (
 
 DROP TABLE IF EXISTS meeting;
 CREATE TABLE meeting (
-	meeting_date	DATE					NOT NULL,
-    room_id			INT						NOT NULL,
-    start_time		TIME					NOT NULL,
-    end_time		TIME					NOT NULL,
-    FOREIGN KEY (room_id, start_time, end_time)
-		REFERENCES meeting_group(room_id, start_time, end_time)
+	meeting_date		DATE					NOT NULL,
+    room_id				INT						NOT NULL,
+    start_time			TIME					NOT NULL,
+    end_time			TIME					NOT NULL,
+    group_start_date	DATE					NOT NULL,
+    FOREIGN KEY (room_id, start_time, end_time, group_start_date)
+		REFERENCES meeting_group(room_id, start_time, end_time, start_date)
         ON UPDATE CASCADE ON DELETE CASCADE,
 	PRIMARY KEY(room_id, start_time, end_time, meeting_date)
 );
@@ -127,4 +128,3 @@ END;
 $$
 
 DELIMITER ;
-
