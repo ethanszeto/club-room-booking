@@ -160,11 +160,12 @@ export default class MeetingController {
 
       let meetingPromises = dates.map((date) => {
         let meetingSql = `
-          INSERT INTO meeting (meeting_date, room_id, start_time, end_time) VALUES (
+          INSERT INTO meeting (meeting_date, room_id, start_time, end_time, group_start_date) VALUES (
             "${date}",
             ${room_id},
             "${start_time}",
-            "${end_time}"
+            "${end_time}",
+            "${start_date}"
           );
         `;
 
@@ -200,11 +201,18 @@ export default class MeetingController {
         meeting_group.user_id,
         meeting_group.club_id,
         meeting_group.team_name,
-        GROUP_CONCAT(meeting.meeting_date ORDER BY meeting.meeting_date ASC)
+        GROUP_CONCAT(meeting.meeting_date ORDER BY meeting.meeting_date ASC) AS meeting_dates
       FROM meeting_group
-      JOIN meeting ON meeting_group.group_id = meeting.group_id
+      JOIN meeting ON meeting_group.room_id = meeting.room_id AND meeting_group.start_time = meeting.start_time AND meeting_group.end_time = meeting.end_time AND meeting_group.start_date = meeting.group_start_date
       WHERE meeting_group.club_id = ${club_id}
-      AND meeting_group.team_name = "${team_name}";
+      AND meeting_group.team_name = "${team_name}"
+      GROUP BY meeting_group.start_time,
+      meeting_group.end_time,
+      meeting_group.start_date,
+      meeting_group.room_id,
+      meeting_group.user_id,
+      meeting_group.club_id,
+      meeting_group.team_name;
     `;
 
     MySQLConnection.makeQuery(sql, (err, rows, columns) => {
@@ -218,10 +226,17 @@ export default class MeetingController {
   }
 
   static async deleteMeetingGroup(req, res) {
-    let group_id = req.body.group_id;
+    let room_id = req.body.room_id;
+    let start_time = req.body.start_time;
+    let end_time = req.body.end_time;
+    let group_start_date = req.body.group_start_date;
 
     let sql = `
-      DELETE FROM meeting_group WHERE group_id = ${group_id};
+      DELETE FROM meeting_group
+        WHERE room_id = ${room_id}
+        AND start_time = "${start_time}"
+        AND end_time = "${end_time}"
+        AND group_start_date = "${group_start_date}";
     `;
 
     MySQLConnection.makeQuery(sql, (err, rows, columns) => {

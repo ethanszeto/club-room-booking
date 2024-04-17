@@ -2,8 +2,6 @@ document.getElementById("select-club").addEventListener("change", loadTeams);
 
 window.addEventListener("load", loadClubs);
 
-changeMeetingDateOptions();
-
 async function loadClubs() {
   let response = await request("POST", {}, "/club/get-all");
   if (response.error) {
@@ -44,14 +42,17 @@ async function loadTeams() {
 
 async function loadMeetings() {
   let clubId = document.getElementById("select-club").value;
-  let teamName = document.getElementById("select-club").value;
+  let teamName = document.getElementById("select-team").value;
   let response = await request("POST", { club_id: clubId, team_name: teamName }, "/meeting/get-meetings-by-team");
 
   if (response.error) {
     console.log(response.error);
   } else {
+    console.log(response);
     if (response.rows) {
-      response.rows.forEach(() => {});
+      response.rows.forEach((meetingGroup) => {
+        console.log(meetingGroup.meeting_dates.split(","));
+      });
     }
   }
 }
