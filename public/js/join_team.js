@@ -47,8 +47,13 @@ async function joinTeam() {
   let club_id = document.getElementById("select-club").value;
   let team_name = document.getElementById("select-team").value;
   if (!team_name) {
-    alert("Please select a team!");
+    document.getElementById("join-team-message").innerHTML = "Please select a team!";
   } else {
     let response = request("POST", { club_id: club_id, team_name: team_name }, "/club/team/join");
+    if (response.error) {
+      window.location.href = "/club/team/join";
+    } else {
+      document.getElementById("join-team-message").innerHTML = "Sucessfully sent request!";
+    }
   }
 }

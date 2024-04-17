@@ -26,22 +26,26 @@
       <a class="btn abutton navbar-button" href="/club/team/create">Create a team</a>
       <a class="btn abutton navbar-button" href="/user/logout">Log out</a>
     </div>
-    <h1>Join a club!</h1>
-    <div id="content">
-      <div id="clubs" class="panel">
-        <h2>Select a club to join</h2>
-        <hr />
-        <select id="select-club"></select>
+    <div id="join-team-panel">
+      <h1>Request to join a team!</h1>
+      <div id="content">
+        <div id="clubs" class="panel">
+          <h2>Select a club to join</h2>
+          <hr />
+          <select id="select-club"></select>
+        </div>
+        <div id="teams" class="panel">
+          <h2>Select a team to join</h2>
+          <hr />
+          <select id="select-team"></select>
+        </div>
       </div>
-      <div id="teams" class="panel">
-        <h2>Select a team to join</h2>
-        <hr />
-        <select id="select-team"></select>
+      <div>
+        <button id="join-team" class="btn">Submit</button>
+        <p id="join-team-message"></p>
       </div>
     </div>
-    <div>
-      <button id="join-team" class="btn">Submit</button>
-    </div>
+
     <div id="dev" class="dev">
       <textarea id="sql-query" class="input-area"></textarea>
       <br />
