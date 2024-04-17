@@ -8,7 +8,7 @@ export default class TeamController {
   static async createTeamByName(req, res, name, club_id) {
     let sql = `INSERT INTO team (team_name, num_members, club_id) VALUES (
           "${name}",
-          1,
+          0,
           "${club_id}"
         );`;
 
