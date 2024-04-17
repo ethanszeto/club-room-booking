@@ -255,8 +255,10 @@ async function validateAndBookMeeting() {
   let dates;
   if (parseInt(availability.weekday) >= 0 && parseInt(availability.weekday) <= 6) {
     dates = generateMeetingDates(availability.start_date, availability.end_date, parseInt(availability.weekday));
+    console.log("recurring dates:" + dates);
   } else {
     dates = [availability.start_date];
+    console.log("single date:" + dates);
   }
 
   confirmAvailability(
@@ -278,10 +280,10 @@ function formatDate(date) {
 }
 
 function generateMeetingDates(startDate, endDate, dayOfWeek) {
-  startDate = new Date(startDate);
-  endDate = new Date(endDate);
+  startDate = new Date(new Date(startDate).getTime() + 24 * 60 * 60 * 1000);
+  endDate = new Date(new Date(endDate).getTime() + 24 * 60 * 60 * 1000);
   const dates = [];
-  let currentDate = new Date(startDate.getTime()); // Create a new Date object to avoid reference issues
+  let currentDate = new Date(startDate); // Create a new Date object to avoid reference issues
 
   // Loop through dates between start and end dates
   while (currentDate <= endDate) {
@@ -366,7 +368,7 @@ async function confirmAvailability(mtbDates, mtbStartTime, mtbEndTime, dateSlotS
             document.getElementById("error-display").innerHTML = "Invalid timeslots - already booked";
           }
           let meetingText = document.createElement("p");
-          meetingText.innerHTML = `Room already booked on: ${new Date(meeting.meeting_date).toDateString()} from ${timeConversion(
+          meetingText.innerHTML = `Room already booked on: ${new Date(new Date(meeting.meeting_date).getTime() + 24 * 60 * 60 * 1000).toDateString()} from ${timeConversion(
             meeting.start_time
           )} to ${timeConversion(meeting.end_time)}`;
           document.getElementById("availabilities-display").appendChild(meetingText);
