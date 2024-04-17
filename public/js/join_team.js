@@ -6,6 +6,8 @@ async function loadClubs() {
   let response = await request("POST", {}, "/club/get-all");
   if (response.error) {
     console.log(response.error);
+    alert("Something went wrong.");
+    window.location.href = "/";
   } else {
     console.log(response);
     response.rows.forEach((club) => {
@@ -24,6 +26,8 @@ async function loadTeams() {
 
   if (response.error) {
     console.log(response.error);
+    alert("Something went wrong.");
+    window.location.href = "/";
   } else {
     console.log(response);
     document.getElementById("select-team").innerHTML = "";

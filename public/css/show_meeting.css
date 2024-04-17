@@ -1,0 +1,36 @@
+.panel {
+  margin: 10px 10px 10px 10px;
+  padding: 10px 10px 10px 10px;
+  width: 20%;
+  position: relative;
+  border: 1px solid black;
+  top: 0;
+  left: 0;
+}
+
+#meeting-group-display {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  position: relative;
+  justify-content: center;
+  width: 100%;
+}
+
+.meeting-group-div {
+  display: grid;
+  grid-template-columns: auto auto auto auto;
+}
+
+.date-panel {
+  margin: 5px 5px 5px 5px;
+  padding: 0px 5px 0px 5px;
+  position: relative;
+  border: 1px solid black;
+  top: 0;
+  left: 0;
+}
+
+hr {
+  width: 50%;
+}

@@ -188,10 +188,11 @@ export default class MeetingController {
     }
   }
 
+  /*
   static async getMeetingsByTeam(req, res) {
     let team_name = req.body.team_name;
     let club_id = req.body.club_id;
-
+    // first name, last name, room number, building name, building code
     let sql = `
       SELECT
         meeting_group.start_time,
@@ -201,9 +202,17 @@ export default class MeetingController {
         meeting_group.user_id,
         meeting_group.club_id,
         meeting_group.team_name,
+        user.first_name,
+        user.last_name,
+        room.room_number,
+        building.building_name,
+        building.building_code,
         GROUP_CONCAT(meeting.meeting_date ORDER BY meeting.meeting_date ASC) AS meeting_dates
       FROM meeting_group
       JOIN meeting ON meeting_group.room_id = meeting.room_id AND meeting_group.start_time = meeting.start_time AND meeting_group.end_time = meeting.end_time AND meeting_group.start_date = meeting.group_start_date
+      JOIN room ON meeting_group.room_id = room.room_id
+      JOIN building ON room.building_id = building.building_id
+      JOIN user ON meeting_group.user_id = user.user_id
       WHERE meeting_group.club_id = ${club_id}
       AND meeting_group.team_name = "${team_name}"
       GROUP BY meeting_group.start_time,
@@ -224,19 +233,96 @@ export default class MeetingController {
       }
     });
   }
+  */
+
+  static async getMeetingsByTeam(req, res) {
+    let team_name = req.body.team_name;
+    let club_id = req.body.club_id;
+    // first name, last name, room number, building name, building code
+    let sql = `
+      SELECT
+        meeting_group.start_time,
+        meeting_group.end_time,
+        meeting_group.start_date,
+        meeting_group.room_id,
+        meeting_group.user_id,
+        meeting_group.club_id,
+        meeting_group.team_name,
+        user.first_name,
+        user.last_name,
+        room.room_number,
+        building.building_name,
+        building.building_code
+      FROM meeting_group
+      JOIN room ON meeting_group.room_id = room.room_id
+      JOIN building ON room.building_id = building.building_id
+      JOIN user ON meeting_group.user_id = user.user_id
+      WHERE meeting_group.club_id = ${club_id}
+      AND meeting_group.team_name = "${team_name}"
+      GROUP BY meeting_group.start_time,
+      meeting_group.end_time,
+      meeting_group.start_date,
+      meeting_group.room_id,
+      meeting_group.user_id,
+      meeting_group.club_id,
+      meeting_group.team_name;
+    `;
+
+    MySQLConnection.makeQuery(sql, async (err, rows, columns) => {
+      if (err) {
+        console.error(err);
+        return handleError(res, Errors[500].InternalServerError);
+      } else {
+        // Retrieve meeting dates separately
+        for (let i = 0; i < rows.length; i++) {
+          let meeting_dates = await MeetingController.getMeetingDates(
+            rows[i].room_id,
+            rows[i].start_time,
+            rows[i].end_time,
+            rows[i].start_date.toISOString().split("T")[0]
+          );
+          rows[i].meeting_dates = meeting_dates;
+        }
+        res.send({ columns: columns, rows: rows });
+      }
+    });
+  }
+
+  // Function to retrieve meeting dates for a specific meeting
+  static async getMeetingDates(room_id, start_time, end_time, start_date) {
+    return new Promise((resolve, reject) => {
+      let sql = `
+        SELECT meeting_date
+        FROM meeting
+        WHERE room_id = ${room_id}
+        AND start_time = "${start_time}"
+        AND end_time = "${end_time}"
+        AND group_start_date = "${start_date}"
+        ORDER BY meeting_date ASC;
+      `;
+      MySQLConnection.makeQuery(sql, (err, rows) => {
+        if (err) {
+          reject(err);
+        } else {
+          let dates = rows.map((row) => row.meeting_date);
+          resolve(dates.join(",")); // Concatenate meeting dates
+        }
+      });
+    });
+  }
 
   static async deleteMeetingGroup(req, res) {
     let room_id = req.body.room_id;
     let start_time = req.body.start_time;
     let end_time = req.body.end_time;
-    let group_start_date = req.body.group_start_date;
+    let start_date = new Date(req.body.group_start_date).toISOString().slice(0, 19).replace("T", " ");
 
     let sql = `
       DELETE FROM meeting_group
         WHERE room_id = ${room_id}
         AND start_time = "${start_time}"
         AND end_time = "${end_time}"
-        AND group_start_date = "${group_start_date}";
+        AND start_date = "${start_date}";
     `;
 
     MySQLConnection.makeQuery(sql, (err, rows, columns) => {
@@ -244,7 +330,7 @@ export default class MeetingController {
         console.error(err);
         return handleError(res, Errors[500].InternalServerError);
       } else {
-        res.send({ columns: columns, rows: rows });
+        res.redirect("/meeting/show");
       }
     });
   }

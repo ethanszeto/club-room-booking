@@ -5,6 +5,8 @@ async function loadRequestsToTeam() {
   let response = await request("POST", {}, "/club/team/get-user-team-requests");
   if (response.error) {
     console.error(response.error);
+    alert("Something went wrong.");
+    window.location.href = "/user/approve";
   } else {
     console.log(response);
     let teams = response.rows;
@@ -57,6 +59,8 @@ async function sendUpdatedTeamRequests() {
   let response = await request("POST", { updates: jsonSelections }, "/club/team/post-user-team-updates");
   if (response.error) {
     console.error(response.error);
+    alert("Something went wrong.");
+    window.location.href = "/user/approve";
   } else {
     window.location.href = "/user/approve";
   }
