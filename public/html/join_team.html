@@ -6,12 +6,26 @@
     <script defer src="/public/js/dev.js"></script>
     <script defer src="/public/js/api.js"></script>
     <script defer src="/public/js/join_team.js"></script>
+    <link href="/public/css/master.css" rel="stylesheet" type="text/css" />
+    <link href="/public/css/navbar.css" rel="stylesheet" type="text/css" />
     <link href="/public/css/join_team.css" rel="stylesheet" type="text/css" />
     <link href="/public/css/dev.css" rel="stylesheet" type="text/css" />
     <link href="/public/css/index.css" rel="stylesheet" type="text/css" />
     <title>Join Team</title>
   </head>
   <body>
+    <div id="navbar">
+      <h1>Northeastern Club Meeting Bookings</h1>
+      <hr id="navbar-breaker" />
+      <a class="btn abutton navbar-button" href="/meeting/book">Book a meeting</a>
+      <a class="btn abutton navbar-button" href="/meeting/show">See meetings</a>
+      <a class="btn abutton navbar-button" href="/club/team/join">Join a team</a>
+      <a class="btn abutton navbar-button" href="/user/profile">Profile</a>
+      <a class="btn abutton navbar-button" href="/user/approve">Approve join requests</a>
+      <a class="btn abutton navbar-button" href="/club/create">Create a club</a>
+      <a class="btn abutton navbar-button" href="/club/team/create">Create a team</a>
+      <a class="btn abutton navbar-button" href="/">Log out</a>
+    </div>
     <h1>Join a club!</h1>
     <div id="content">
       <div id="clubs" class="panel">
