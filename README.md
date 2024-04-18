@@ -4,10 +4,10 @@
 ## Running the Project
 
 ### Technologies Needed:
-- Git
-- Node.js
-- Docker Desktop
-- MySQL
+- [Git](https://git-scm.com/downloads)
+- [Node.js](https://nodejs.org/en/download)
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/)
+- [MySQL](https://www.mysql.com/downloads/)
 
 ### Protocol:
 1. Clone the repository to an empty folder in your file directory.
