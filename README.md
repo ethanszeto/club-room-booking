@@ -1,20 +1,29 @@
 # db-design-meeting-scheduler
 <hr>
 
-## Running the Project
+# Running the Project
 
-### Technologies Needed:
+## Technologies Needed:
 - [Git](https://git-scm.com/downloads)
 - [Node.js](https://nodejs.org/en/download)
 - [Docker Desktop](https://www.docker.com/products/docker-desktop/)
 - [MySQL](https://www.mysql.com/downloads/)
 
-### Protocol:
-1. Clone the repository to an empty folder in your file directory.
-2. Open mySQL workbench or a related mySQL IDE.
-3. Open the file `/sql/`
-4. Open the terminal to folder you cloned the repository to.
-5. Run the following commands:
+## Protocol:
+
+### Download Project:
+<ol>
+  <li>Clone this repository to an empty folder in your file directory.</li>
+</ol>
+
+### MySQL Setup
+1. Open MySQL Workbench or a related MySQL IDE.
+2. From the root directory of the project, open the file `/sql/data_dump.sql` in MySQL Workbench.
+3. Run the whole script to initialize necessary seeding data.</li>
+
+### Node.js / Docker Setup
+1. Open the terminal to folder you cloned the repository to.
+2. Run the following commands:
 
 ```properties
 npm i
@@ -29,7 +38,8 @@ docker compose build
 docker compose up -d
 ```
 
-4. Navigate to Docker Desktop. Click on the "Containers" tab on the top lefthand side. You should see a newly created conatainer. Either open the subfolder, and click on "5200:5200", or navigate to http://localhost:5200 on your preferred web-browser.
+3. Navigate to Docker Desktop. Click on the "Containers" tab on the top lefthand side. You should see a newly created conatainer. Either open the subfolder, and click on "5200:5200", or navigate to http://localhost:5200 on your preferred web-browser.
+4. Enter your local MySQL Instance username and password into the website prompt.
 
 ### Troubleshooting
 
@@ -40,4 +50,4 @@ docker compose up -d
     flush privileges;
     ```
 
-- Port intersection: If you have another application running on port 4321, you must deactivate it in order to run this project.
+- Port intersection: If you have another application running on port 5200, you must deactivate it in order to run this project.
