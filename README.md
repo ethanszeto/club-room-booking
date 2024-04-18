@@ -11,8 +11,10 @@
 
 ### Protocol:
 1. Clone the repository to an empty folder in your file directory.
-2. Open the terminal to folder you cloned the repository to.
-3. Run the following commands:
+2. Open mySQL workbench or a related mySQL IDE.
+3. Open the file `/sql/`
+4. Open the terminal to folder you cloned the repository to.
+5. Run the following commands:
 
 ```properties
 npm i
