@@ -23,7 +23,8 @@
 
 ### Node.js / Docker Setup
 1. Open the terminal to folder you cloned the repository to.
-2. Run the following commands:
+2. Add the `.env` file to the root directory of this project. The `.env` project will be given in the .zip file.
+3. Run the following commands:
 
 ```properties
 npm i
